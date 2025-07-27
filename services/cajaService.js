@@ -25,4 +25,9 @@ async function buscarPorId(id) {
   return await cajaRepository.buscarPorId(id);
 }
 
+async function obtenerCajaPorId(id) {
+  return await buscarPorId(id);
+}
+
 module.exports.buscarPorId = buscarPorId;
+module.exports.obtenerCajaPorId = obtenerCajaPorId;

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Venta</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .ventas-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 32px 24px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+        }
+        .ventas-title {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .productos-table, .carrito-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 32px;
+        }
+        .productos-table th, .productos-table td, .carrito-table th, .carrito-table td {
+            padding: 12px 8px;
+            border-bottom: 1px solid #e0e0e0;
+            text-align: left;
+        }
+        .productos-table th, .carrito-table th {
+            background: var(--primary-light, #f5f6fa);
+        }
+        .productos-table tr:hover, .carrito-table tr:hover {
+            background: #f8fafc;
+            transition: background 0.2s;
+        }
+        .btn {
+            padding: 7px 18px;
+            border-radius: 6px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            margin-right: 6px;
+            transition: background 0.15s, color 0.15s;
+        }
+        .btn-add {
+            background: #27ae60;
+            color: #fff;
+        }
+        .btn-add:hover {
+            background: #219150;
+        }
+        .btn-remove {
+            background: #e74c3c;
+            color: #fff;
+        }
+        .btn-remove:hover {
+            background: #c0392b;
+        }
+        .form-row {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+        .form-row label {
+            min-width: 120px;
+            font-weight: 500;
+        }
+        .form-row input, .form-row select {
+            flex: 1;
+            padding: 7px 10px;
+            border-radius: 5px;
+            border: 1px solid #d0d0d0;
+            font-size: 1rem;
+        }
+        .venta-actions {
+            text-align: right;
+            margin-top: 18px;
+        }
+        .error-message {
+            color: #e74c3c;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .success-message {
+            color: #27ae60;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .total-label {
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-align: right;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="ventas-container">
+        <h1 class="ventas-title">Registrar Venta</h1>
+        <div class="error-message" id="venta-error"></div>
+        <div class="success-message" id="venta-success"></div>
+        <h2>Productos</h2>
+        <table class="productos-table" id="productos-table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Marca</th>
+                    <th>Presentación</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                    <th>Cantidad</th>
+                    <th>Agregar</th>
+                </tr>
+            </thead>
+            <tbody id="productos-tbody">
+                <!-- Productos aquí -->
+            </tbody>
+        </table>
+        <h2>Carrito</h2>
+        <table class="carrito-table" id="carrito-table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Cantidad</th>
+                    <th>Precio Unitario</th>
+                    <th>Subtotal</th>
+                    <th>Quitar</th>
+                </tr>
+            </thead>
+            <tbody id="carrito-tbody">
+                <!-- Carrito aquí -->
+            </tbody>
+        </table>
+        <div class="total-label" id="total-label">Total: $0.00</div>
+        <div class="venta-actions">
+            <label for="forma_pago">Forma de pago:</label>
+            <select id="forma_pago">
+                <option value="Efectivo">Efectivo</option>
+                <option value="Transferencia">Transferencia</option>
+                <option value="Mixto">Mixto</option>
+            </select>
+            <button class="btn btn-add" id="registrar-venta-btn">Registrar Venta</button>
+            <button class="btn" onclick="location.href='/html/dashboard.html'">Volver al Dashboard</button>
+        </div>
+    </div>
+    <script src="/js/ventas.js"></script>
+</body>
+</html> 

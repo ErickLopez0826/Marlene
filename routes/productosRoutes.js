@@ -33,12 +33,28 @@ const router = express.Router();
  *               Nombre:
  *                 type: string
  *                 example: "Salas"
+ *               Marca:
+ *                 type: string
+ *                 example: "La Costeña"
+ *               Presentacion:
+ *                 type: string
+ *                 example: "Botella 250ml"
  *               Precio_Venta:
  *                 type: number
  *                 example: 100
+ *               Precio_Compra:
+ *                 type: number
+ *                 example: 80
  *               Stock_Total:
  *                 type: integer
  *                 example: 10
+ *               Activo:
+ *                 type: integer
+ *                 example: 1
+ *               Fecha_Caducidad:
+ *                 type: string
+ *                 format: date
+ *                 example: "2025-12-31"
  *               ID_Proveedor:
  *                 type: integer
  *                 example: 1
@@ -92,12 +108,34 @@ router.get('/', authMiddleware, productosController.getProductosActivos);
  *           schema:
  *             type: object
  *             properties:
- *               nombre:
+ *               Nombre:
  *                 type: string
- *               precio:
+ *                 example: "Salsa picante"
+ *               Marca:
+ *                 type: string
+ *                 example: "La Costeña"
+ *               Presentacion:
+ *                 type: string
+ *                 example: "Botella 250ml"
+ *               Precio_Venta:
  *                 type: number
- *               stock:
+ *                 example: 80
+ *               Precio_Compra:
+ *                 type: number
+ *                 example: 60
+ *               Stock_Total:
  *                 type: integer
+ *                 example: 20
+ *               Activo:
+ *                 type: integer
+ *                 example: 1
+ *               Fecha_Caducidad:
+ *                 type: string
+ *                 format: date
+ *                 example: "2025-12-31"
+ *               ID_Proveedor:
+ *                 type: integer
+ *                 example: 1
  *     responses:
  *       200:
  *         description: Producto editado

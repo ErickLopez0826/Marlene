@@ -52,8 +52,9 @@ router.get('/:id', authMiddleware, ventaController.getVentaPorId);
  *                       type: integer
  *                     cantidad:
  *                       type: integer
- *               total:
- *                 type: number
+ *               forma_pago:
+ *                 type: string
+ *                 example: "Efectivo"
  *     responses:
  *       201:
  *         description: Venta creada

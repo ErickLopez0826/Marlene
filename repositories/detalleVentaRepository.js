@@ -1,3 +1,5 @@
+const db = require('../config/db');
+
 function buscarPorVenta(ID_Venta) {
   return new Promise((resolve, reject) => {
     db.query('SELECT * FROM detalleventa WHERE ID_Venta = ?', [ID_Venta], (err, results) => {
@@ -6,9 +8,6 @@ function buscarPorVenta(ID_Venta) {
     });
   });
 }
-
-module.exports.buscarPorVenta = buscarPorVenta;
-const db = require('../config/db');
 
 function insertarDetalle(detalleData) {
   return new Promise((resolve, reject) => {
@@ -27,4 +26,7 @@ function insertarDetalle(detalleData) {
   });
 }
 
-module.exports = { insertarDetalle };
+module.exports = {
+  buscarPorVenta,
+  insertarDetalle
+};

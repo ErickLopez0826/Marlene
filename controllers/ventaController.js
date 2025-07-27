@@ -1,13 +1,13 @@
 exports.getVentaPorId = async (req, res) => {
-  const { id } = req.params;
   try {
-    const venta = await ventaService.obtenerVentaConDetalle(id);
+    const venta = await ventaService.obtenerVentaPorId(req.params.id);
     if (!venta) {
       return res.status(404).json({ message: 'Venta no encontrada' });
     }
     res.json(venta);
   } catch (error) {
-    res.status(500).json({ message: 'Error al consultar la venta', error });
+    console.error(error); // Log del error real
+    res.status(500).json({ message: 'error al consultar la venta', error });
   }
 };
 const ventaService = require('../services/ventaService');

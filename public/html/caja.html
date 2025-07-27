@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corte de Caja</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .caja-container {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 32px 24px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+        }
+        .caja-title {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .form-section {
+            margin-bottom: 32px;
+            background: var(--primary-light, #f5f6fa);
+            padding: 20px 18px;
+            border-radius: 10px;
+        }
+        .form-row {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+        .form-row label {
+            min-width: 120px;
+            font-weight: 500;
+        }
+        .form-row input, .form-row select {
+            flex: 1;
+            padding: 7px 10px;
+            border-radius: 5px;
+            border: 1px solid #d0d0d0;
+            font-size: 1rem;
+        }
+        .form-actions {
+            text-align: right;
+        }
+        .form-actions .btn {
+            margin-left: 8px;
+        }
+        .error-message {
+            color: #e74c3c;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .success-message {
+            color: #27ae60;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .panel-corte {
+            background: var(--primary-light, #f5f6fa);
+            border-radius: 12px;
+            padding: 24px 18px;
+            margin-top: 24px;
+            box-shadow: 0 1px 8px rgba(0,0,0,0.07);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s, transform 0.5s;
+        }
+        .panel-corte.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .panel-corte h3 {
+            margin-top: 0;
+        }
+        .panel-corte .panel-row {
+            margin-bottom: 10px;
+            font-size: 1.08rem;
+        }
+        .panel-corte .panel-label {
+            font-weight: 500;
+            min-width: 120px;
+            display: inline-block;
+        }
+        .panel-corte .panel-obs {
+            color: #555;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="caja-container">
+        <h1 class="caja-title">Corte de Caja</h1>
+        <div class="form-section">
+            <form id="corte-form">
+                <div class="form-row">
+                    <label for="fecha_corte">Fecha de corte</label>
+                    <input type="date" id="fecha_corte" name="fecha_corte" required>
+                </div>
+                <div class="form-row">
+                    <label for="total_efectivo">Total Efectivo</label>
+                    <input type="number" id="total_efectivo" name="total_efectivo" required min="0" step="0.01">
+                </div>
+                <div class="form-row">
+                    <label for="total_transferencia">Total Transferencia</label>
+                    <input type="number" id="total_transferencia" name="total_transferencia" required min="0" step="0.01">
+                </div>
+                <div class="form-row">
+                    <label for="total_caja">Total Caja</label>
+                    <input type="number" id="total_caja" name="total_caja" required min="0" step="0.01">
+                </div>
+                <div class="form-row">
+                    <label for="responsable">Responsable</label>
+                    <input type="text" id="responsable" name="responsable" required>
+                </div>
+                <div class="form-row">
+                    <label for="observaciones">Observaciones</label>
+                    <input type="text" id="observaciones" name="observaciones">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-edit">Registrar Corte</button>
+                </div>
+                <div class="error-message" id="form-error"></div>
+                <div class="success-message" id="form-success"></div>
+            </form>
+        </div>
+        <div class="form-section">
+            <form id="consulta-form">
+                <div class="form-row">
+                    <label for="consulta-id">Consultar por ID</label>
+                    <input type="number" id="consulta-id" name="consulta-id" required min="1">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn">Consultar Corte</button>
+                </div>
+            </form>
+        </div>
+        <div class="panel-corte" id="panel-corte">
+            <!-- Panel de corte aquí -->
+        </div>
+        <button class="btn" onclick="location.href='/html/dashboard.html'">Volver al Dashboard</button>
+    </div>
+    <script src="/js/caja.js"></script>
+</body>
+</html> 

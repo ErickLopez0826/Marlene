@@ -28,12 +28,29 @@ const router = express.Router();
  *           schema:
  *             type: object
  *             properties:
- *               nombre:
+ *               Descripcion:
  *                 type: string
- *               descuento:
+ *                 example: "2 x 1"
+ *               Fecha_Inicio:
+ *                 type: string
+ *                 format: date
+ *                 example: "2024-07-25"
+ *               Fecha_Fin:
+ *                 type: string
+ *                 format: date
+ *                 example: "2024-08-25"
+ *               Activo:
+ *                 type: integer
+ *                 example: 1
+ *               Tipo:
+ *                 type: string
+ *                 example: "Descuento"
+ *               Descuento_Porcentual:
  *                 type: number
- *               activo:
- *                 type: boolean
+ *                 example: 10
+ *               Precio_Promocional:
+ *                 type: number
+ *                 example: null
  *     responses:
  *       201:
  *         description: Promoción creada
@@ -42,5 +59,6 @@ const router = express.Router();
  */
 router.get('/', authMiddleware, promocionController.listarPromocionesActivas);
 router.post('/', authMiddleware, promocionController.crearPromocion);
+router.get('/:id', authMiddleware, promocionController.getPromocionPorId);
 
 module.exports = router;

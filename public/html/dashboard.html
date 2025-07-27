@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Principal</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .dashboard-container {
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 32px 24px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+        }
+        .dashboard-title {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 24px;
+        }
+        .dashboard-card {
+            background: var(--primary-light, #f5f6fa);
+            border-radius: 12px;
+            padding: 32px 0 24px 0;
+            text-align: center;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+            transition: transform 0.15s, box-shadow 0.15s;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--primary, #2d3a4b);
+        }
+        .dashboard-card:hover {
+            transform: translateY(-6px) scale(1.04);
+            box-shadow: 0 4px 18px rgba(0,0,0,0.13);
+            background: var(--primary, #e6e9f2);
+        }
+        .logout-btn {
+            background: #e74c3c;
+            color: #fff;
+            margin-top: 24px;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 0;
+            width: 100%;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <h1 class="dashboard-title">Panel Principal</h1>
+        <div class="dashboard-grid">
+            <div class="dashboard-card" onclick="location.href='/html/productos.html'">Productos</div>
+            <div class="dashboard-card" onclick="location.href='/html/ventas.html'">Ventas</div>
+            <div class="dashboard-card" onclick="location.href='/html/inventario.html'">Inventario</div>
+            <div class="dashboard-card" onclick="location.href='/html/caja.html'">Caja</div>
+            <div class="dashboard-card" onclick="location.href='/html/promociones.html'">Promociones</div>
+        </div>
+        <button class="logout-btn" id="logout-btn">Cerrar sesión</button>
+    </div>
+    <script src="/js/dashboard.js"></script>
+</body>
+</html> 

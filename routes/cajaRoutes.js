@@ -27,7 +27,7 @@ const router = express.Router();
  *       404:
  *         description: No hay corte registrado para ese ID
  */
-router.get('/:id', authMiddleware, cajaController.getCortePorId);
+router.get('/:id', authMiddleware, cajaController.getCajaPorId);
 
 /**
  * @swagger

@@ -1,3 +1,5 @@
+const db = require('../config/db');
+
 function buscarActivasPorFecha(fecha) {
   return new Promise((resolve, reject) => {
     const sql = `SELECT * FROM promocion WHERE LOWER(Activo) = "1" AND Fecha_Inicio <= ? AND Fecha_Fin >= ?`;
@@ -13,9 +15,6 @@ function buscarActivasPorFecha(fecha) {
     });
   });
 }
-
-module.exports.buscarActivasPorFecha = buscarActivasPorFecha;
-const db = require('../config/db');
 
 function insertarPromocion(data) {
   return new Promise((resolve, reject) => {
@@ -36,4 +35,17 @@ function insertarPromocion(data) {
   });
 }
 
-module.exports = { insertarPromocion };
+function buscarPorId(id) {
+  return new Promise((resolve, reject) => {
+    db.query('SELECT * FROM promocion WHERE ID_Promocion = ?', [id], (err, results) => {
+      if (err) return reject(err);
+      resolve(results[0]);
+    });
+  });
+}
+
+module.exports = {
+  buscarActivasPorFecha,
+  insertarPromocion,
+  buscarPorId
+};

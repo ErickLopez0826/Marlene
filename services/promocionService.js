@@ -1,3 +1,6 @@
+const promocionRepository = require('../repositories/promocionRepository');
+const promocionProductoRepository = require('../repositories/promocionProductoRepository');
+
 async function listarPromocionesActivas() {
   const hoy = new Date().toISOString().slice(0, 10);
   const promociones = await promocionRepository.buscarActivasPorFecha(hoy);
@@ -6,10 +9,6 @@ async function listarPromocionesActivas() {
   }
   return promociones;
 }
-
-module.exports.listarPromocionesActivas = listarPromocionesActivas;
-const promocionRepository = require('../repositories/promocionRepository');
-const promocionProductoRepository = require('../repositories/promocionProductoRepository');
 
 async function crearPromocion(data) {
   // Validar fechas y tipo
@@ -37,4 +36,12 @@ async function crearPromocion(data) {
   return promocion;
 }
 
-module.exports = { crearPromocion };
+async function obtenerPromocionPorId(id) {
+  return await promocionRepository.buscarPorId(id);
+}
+
+module.exports = {
+  listarPromocionesActivas,
+  crearPromocion,
+  obtenerPromocionPorId
+};

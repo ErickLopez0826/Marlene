@@ -49,9 +49,9 @@ function insertarProducto(productoData) {
       productoData.Nombre,
       productoData.Marca || null,
       productoData.Presentacion || null,
-      productoData.Precio_Venta,
-      productoData.Precio_Compra || null,
-      productoData.Stock_Total || null,
+      productoData.Precio_Venta !== undefined ? productoData.Precio_Venta : 0,
+      productoData.Precio_Compra !== undefined ? productoData.Precio_Compra : null,
+      productoData.Stock_Total !== undefined ? productoData.Stock_Total : 0,
       productoData.Activo !== undefined ? productoData.Activo : 1,
       productoData.Fecha_Caducidad || null,
       productoData.ID_Proveedor

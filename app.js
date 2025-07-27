@@ -50,9 +50,11 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Servidor corriendo en puerto ${PORT}`);
-  console.log(`Accede a la API en: http://localhost:${PORT}/`);
-  console.log(`Documentación Swagger: http://localhost:${PORT}/api-docs`);
+  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+  console.log('Rutas principales:');
+  console.log(`- Login:      http://localhost:${PORT}/html/login.html`);
+  console.log(`- Dashboard:  http://localhost:${PORT}/html/dashboard.html`);
+  // Agrega aquí más rutas si creas más páginas
 });
 
 const path = require('path');

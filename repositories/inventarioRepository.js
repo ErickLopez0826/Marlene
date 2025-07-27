@@ -57,8 +57,10 @@ const db = require('../config/db');
 
 function registrarSalida(ID_Producto, cantidad, ID_Venta) {
   return new Promise((resolve, reject) => {
-    const sql = `INSERT INTO inventario (ID_Producto, Movimiento, Cantidad, Referencia) VALUES (?, 'SALIDA', ?, ?)`;
-    db.query(sql, [ID_Producto, cantidad, ID_Venta], (err, result) => {
+    // Ajusta los campos según la estructura real de tu tabla inventario
+    const sql = `INSERT INTO inventario (ID_Producto, Tipo_Movimiento, Cantidad, Fecha_Movimiento, Observaciones, ID_Usuario) VALUES (?, ?, ?, NOW(), ?, ?)`;
+    // Puedes ajustar los valores de Observaciones y ID_Usuario según tu lógica de negocio
+    db.query(sql, [ID_Producto, 'Salida', cantidad, `Venta ID ${ID_Venta}`, 1], (err, result) => {
       if (err) return reject(err);
       resolve(result);
     });

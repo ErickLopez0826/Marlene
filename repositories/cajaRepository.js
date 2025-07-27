@@ -32,7 +32,7 @@ const db = require('../config/db');
 
 function obtenerCajaActiva() {
   return new Promise((resolve, reject) => {
-    db.query('SELECT * FROM caja WHERE Activa = 1 LIMIT 1', (err, results) => {
+    db.query('SELECT * FROM caja ORDER BY ID_Caja DESC LIMIT 1', (err, results) => {
       if (err) return reject(err);
       resolve(results[0]);
     });
