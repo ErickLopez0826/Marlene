@@ -1,14 +1,22 @@
 const mysql = require('mysql2');
 require('dotenv').config();
 
-const pool = mysql.createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+const config = {
+  host: process.env.DB_HOST || 'mysql-warner.alwaysdata.net',
+  user: process.env.DB_USER || 'warner',
+  password: process.env.DB_PASSWORD || 'baqueta2',
+  database: process.env.DB_NAME || 'warner_tienda_lucy',
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
-});
+};
 
-module.exports = pool;
+const pool = mysql.createPool(config);
+const promisePool = pool.promise();
+
+module.exports = {
+  pool,
+  promise: promisePool,
+  getConnection: () => pool.getConnection(),
+  query: (sql, params) => promisePool.query(sql, params)
+}; 

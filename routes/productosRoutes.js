@@ -5,6 +5,32 @@ const productosController = require('../controllers/productosController');
 const authMiddleware = require('../middleware/authMiddleware');
 const router = express.Router();
 
+// Ruta temporal sin autenticación para pruebas
+router.get('/test', async (req, res) => {
+    try {
+        const db = require('../config/db');
+        const [productos] = await db.pool.query('SELECT * FROM producto LIMIT 5');
+        res.json(productos);
+    } catch (error) {
+        console.error('Error en test productos:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Ruta temporal sin autenticación para obtener todos los productos
+router.get('/all', async (req, res) => {
+    try {
+        console.log('🔍 Obteniendo todos los productos...');
+        const db = require('../config/db');
+        const [productos] = await db.promise.query('SELECT * FROM producto WHERE Activo = 1');
+        console.log(`✅ Productos encontrados: ${productos.length}`);
+        res.json(productos);
+    } catch (error) {
+        console.error('❌ Error al obtener productos:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
 /**
  * @swagger
  * /api/productos:

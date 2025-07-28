@@ -1,97 +1,304 @@
-// Redirige al login si no hay token JWT
-if (!localStorage.getItem('jwtToken')) {
-    window.location.href = '/html/login.html';
+// Verificar si el usuario está logueado
+function checkAuth() {
+    const user = localStorage.getItem('user');
+    const token = localStorage.getItem('jwtToken');
+    
+    console.log('🔍 Verificando autenticación...');
+    console.log('👤 Usuario:', user ? 'Sí' : 'No');
+    console.log('🔑 Token:', token ? 'Sí' : 'No');
+    
+    if (!user || !token) {
+        console.log('❌ No autenticado, redirigiendo al login');
+        window.location.href = '/html/login.html';
+        return false;
+    }
+    
+    console.log('✅ Usuario autenticado');
+    return true;
+}
+
+// Verificar autenticación al cargar la página
+if (!checkAuth()) {
+    // La redirección ya se hace en checkAuth()
+    throw new Error('No autenticado');
 }
 
 const API_CAJA = '/api/caja';
-const token = localStorage.getItem('jwtToken');
 
+// Elementos del DOM
 const corteForm = document.getElementById('corte-form');
-const consultaForm = document.getElementById('consulta-form');
-const errorMsg = document.getElementById('form-error');
-const successMsg = document.getElementById('form-success');
-const panelCorte = document.getElementById('panel-corte');
+const cortesGrid = document.getElementById('cortes-grid');
+const searchInput = document.getElementById('search-cortes');
+const messageContainer = document.getElementById('message-container');
+const nuevoCorteBtn = document.getElementById('nuevo-corte-btn');
+const formSection = document.querySelector('.form-section');
 
-function limpiarMensajes() {
-    errorMsg.textContent = '';
-    successMsg.textContent = '';
-}
+// Variables globales
+let cortes = [];
+let cortesFiltrados = [];
 
-function mostrarPanelCorte(corte) {
-    if (!corte) {
-        panelCorte.innerHTML = '<div class="panel-row">No se encontró corte para esa fecha.</div>';
-        panelCorte.classList.add('visible');
-        return;
-    }
-    panelCorte.innerHTML = `
-        <h3>Corte de Caja</h3>
-        <div class="panel-row"><span class="panel-label">Fecha:</span> ${corte.Fecha_Corte ? corte.Fecha_Corte.split('T')[0] : ''}</div>
-        <div class="panel-row"><span class="panel-label">Total Efectivo:</span> $${Number(corte.Total_Efectivo).toFixed(2)}</div>
-        <div class="panel-row"><span class="panel-label">Total Transferencia:</span> $${Number(corte.Total_Transferencia).toFixed(2)}</div>
-        <div class="panel-row"><span class="panel-label">Total Caja:</span> $${Number(corte.Total_Caja).toFixed(2)}</div>
-        <div class="panel-row"><span class="panel-label">Responsable:</span> ${corte.Responsable || ''}</div>
-        <div class="panel-row panel-obs"><span class="panel-label">Observaciones:</span> ${corte.Observaciones || ''}</div>
-    `;
-    setTimeout(() => panelCorte.classList.add('visible'), 50);
-}
-
-corteForm.addEventListener('submit', async function(e) {
-    e.preventDefault();
-    limpiarMensajes();
-    panelCorte.classList.remove('visible');
-    const data = {
-        Fecha_Corte: corteForm.fecha_corte.value,
-        Total_Efectivo: parseFloat(corteForm.total_efectivo.value),
-        Total_Transferencia: parseFloat(corteForm.total_transferencia.value),
-        Total_Caja: parseFloat(corteForm.total_caja.value),
-        Responsable: corteForm.responsable.value.trim(),
-        Observaciones: corteForm.observaciones.value.trim()
+// Función para obtener headers de autenticación
+function getAuthHeaders() {
+    const token = localStorage.getItem('jwtToken') || localStorage.getItem('token');
+    return {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
     };
-    // Validación visual
-    if (!data.Fecha_Corte || isNaN(data.Total_Efectivo) || isNaN(data.Total_Transferencia) || isNaN(data.Total_Caja) || !data.Responsable) {
-        errorMsg.textContent = 'Todos los campos obligatorios deben estar completos.';
-        return;
-    }
-    try {
-        const res = await fetch(API_CAJA, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token
-            },
-            body: JSON.stringify(data)
-        });
-        if (!res.ok) {
-            const err = await res.json();
-            throw new Error(err.message || 'Error al registrar corte');
-        }
-        successMsg.textContent = 'Corte registrado correctamente';
-        corteForm.reset();
-    } catch (err) {
-        errorMsg.textContent = err.message || 'Error al registrar corte';
-    }
-});
+}
 
-consultaForm.addEventListener('submit', async function(e) {
-    e.preventDefault();
-    limpiarMensajes();
-    panelCorte.classList.remove('visible');
-    const id = consultaForm['consulta-id'].value;
-    if (!id) {
-        errorMsg.textContent = 'Ingresa un ID de corte para consultar.';
+// Función para mostrar mensajes
+function showMessage(message, type = 'info') {
+    messageContainer.innerHTML = `
+        <div class="message ${type}">
+            ${message}
+        </div>
+    `;
+    
+    setTimeout(() => {
+        messageContainer.innerHTML = '';
+    }, 5000);
+}
+
+// Función para formatear fecha
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-ES', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+}
+
+// Función para formatear moneda
+function formatCurrency(amount) {
+    return new Intl.NumberFormat('es-MX', {
+        style: 'currency',
+        currency: 'MXN'
+    }).format(amount);
+}
+
+// Función para calcular total automáticamente
+function calcularTotal() {
+    const efectivo = parseFloat(document.getElementById('total_efectivo').value) || 0;
+    const transferencia = parseFloat(document.getElementById('total_transferencia').value) || 0;
+    const total = efectivo + transferencia;
+    
+    document.getElementById('total_caja').value = total.toFixed(2);
+}
+
+// Función para cargar cortes
+async function cargarCortes() {
+    try {
+        console.log('🔍 Cargando cortes de caja...');
+        
+        const response = await fetch(API_CAJA, {
+            headers: getAuthHeaders()
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Error al cargar cortes: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        cortes = data;
+        cortesFiltrados = [...cortes];
+        
+        console.log(`✅ Cortes cargados: ${cortes.length}`);
+        renderCortes();
+        
+    } catch (error) {
+        console.error('❌ Error al cargar cortes:', error);
+        showMessage('Error al cargar cortes de caja', 'error');
+    }
+}
+
+// Función para renderizar cortes
+function renderCortes() {
+    if (cortesFiltrados.length === 0) {
+        cortesGrid.innerHTML = `
+            <div style="text-align: center; padding: 3rem; color: var(--dark-gray);">
+                <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                <p>No se encontraron cortes de caja</p>
+            </div>
+        `;
         return;
     }
+    
+    cortesGrid.innerHTML = '';
+    
+    cortesFiltrados.forEach(corte => {
+        const card = document.createElement('div');
+        card.className = 'corte-card fade-in-up';
+        
+        const fecha = formatDate(corte.Fecha_Corte);
+        const efectivo = formatCurrency(corte.Total_Efectivo);
+        const transferencia = formatCurrency(corte.Total_Transferencia);
+        const total = formatCurrency(corte.Total_Caja);
+        
+        card.innerHTML = `
+            <div class="corte-header">
+                <div>
+                    <div class="corte-fecha">${fecha}</div>
+                    <div class="corte-responsable">
+                        <i class="fas fa-user"></i>
+                        ${corte.Responsable || 'Sin responsable'}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="corte-totales">
+                <div class="corte-total">
+                    <div class="corte-total-label">Efectivo</div>
+                    <div class="corte-total-valor efectivo">${efectivo}</div>
+                </div>
+                <div class="corte-total">
+                    <div class="corte-total-label">Transferencia</div>
+                    <div class="corte-total-valor transferencia">${transferencia}</div>
+                </div>
+                <div class="corte-total">
+                    <div class="corte-total-label">Total</div>
+                    <div class="corte-total-valor total">${total}</div>
+                </div>
+            </div>
+            
+            ${corte.Observaciones ? `
+                <div class="corte-observaciones">
+                    <i class="fas fa-comment"></i>
+                    ${corte.Observaciones}
+                </div>
+            ` : ''}
+        `;
+        
+        cortesGrid.appendChild(card);
+    });
+}
+
+// Función para buscar cortes
+let searchTimeout;
+function buscarCortes(query) {
+    clearTimeout(searchTimeout);
+    
+    searchTimeout = setTimeout(() => {
+        if (!query.trim()) {
+            cortesFiltrados = [...cortes];
+        } else {
+            const searchTerm = query.toLowerCase();
+            cortesFiltrados = cortes.filter(corte => {
+                const fecha = formatDate(corte.Fecha_Corte).toLowerCase();
+                const responsable = (corte.Responsable || '').toLowerCase();
+                const observaciones = (corte.Observaciones || '').toLowerCase();
+                
+                return fecha.includes(searchTerm) || 
+                       responsable.includes(searchTerm) || 
+                       observaciones.includes(searchTerm);
+            });
+        }
+        
+        renderCortes();
+    }, 300);
+}
+
+// Función para guardar corte
+async function guardarCorte(event) {
+    event.preventDefault();
+    
+    const guardarBtn = document.getElementById('guardar-corte-btn');
+    const originalText = guardarBtn.innerHTML;
+    
     try {
-        const res = await fetch(`${API_CAJA}/${id}`, {
-            headers: { 'Authorization': 'Bearer ' + token }
-        });
-        if (!res.ok) {
-            mostrarPanelCorte(null);
+        // Validar formulario
+        const fecha = document.getElementById('fecha_corte').value;
+        const efectivo = parseFloat(document.getElementById('total_efectivo').value);
+        const transferencia = parseFloat(document.getElementById('total_transferencia').value);
+        const total = parseFloat(document.getElementById('total_caja').value);
+        const responsable = document.getElementById('responsable').value.trim();
+        
+        if (!fecha || isNaN(efectivo) || isNaN(transferencia) || isNaN(total) || !responsable) {
+            showMessage('Todos los campos obligatorios deben estar completos', 'error');
             return;
         }
-        const corte = await res.json();
-        mostrarPanelCorte(corte);
-    } catch (err) {
-        errorMsg.textContent = err.message || 'Error al consultar corte';
+        
+        // Cambiar botón a estado de carga
+        guardarBtn.disabled = true;
+        guardarBtn.innerHTML = '<span class="loading"></span> Guardando...';
+        
+        const corteData = {
+            Fecha_Corte: fecha,
+            Total_Efectivo: efectivo,
+            Total_Transferencia: transferencia,
+            Total_Caja: total,
+            Responsable: responsable,
+            Observaciones: document.getElementById('observaciones').value.trim()
+        };
+        
+        console.log('📤 Enviando datos de corte:', corteData);
+        
+        const response = await fetch(API_CAJA, {
+            method: 'POST',
+            headers: getAuthHeaders(),
+            body: JSON.stringify(corteData)
+        });
+        
+        if (!response.ok) {
+            const errorData = await response.text();
+            throw new Error(`Error al guardar corte: ${response.status} ${response.statusText}`);
+        }
+        
+        const resultado = await response.json();
+        console.log('✅ Corte guardado:', resultado);
+        
+        showMessage('Corte de caja registrado correctamente', 'success');
+        
+        // Limpiar formulario
+        corteForm.reset();
+        
+        // Recargar cortes
+        await cargarCortes();
+        
+    } catch (error) {
+        console.error('❌ Error al guardar corte:', error);
+        showMessage('Error al guardar corte: ' + error.message, 'error');
+    } finally {
+        // Restaurar botón
+        guardarBtn.disabled = false;
+        guardarBtn.innerHTML = originalText;
     }
+}
+
+// Función para mostrar formulario en móviles
+function mostrarFormulario() {
+    formSection.classList.toggle('active');
+    
+    if (formSection.classList.contains('active')) {
+        nuevoCorteBtn.innerHTML = '<i class="fas fa-times"></i>';
+    } else {
+        nuevoCorteBtn.innerHTML = '<i class="fas fa-plus"></i>';
+    }
+}
+
+// Event listeners
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Inicializando página de corte de caja...');
+    
+    // Cargar cortes iniciales
+    cargarCortes();
+    
+    // Event listener para el formulario
+    corteForm.addEventListener('submit', guardarCorte);
+    
+    // Event listener para búsqueda
+    searchInput.addEventListener('input', function() {
+        buscarCortes(this.value);
+    });
+    
+    // Event listeners para cálculo automático
+    document.getElementById('total_efectivo').addEventListener('input', calcularTotal);
+    document.getElementById('total_transferencia').addEventListener('input', calcularTotal);
+    
+    // Establecer fecha mínima como hoy
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('fecha_corte').min = today;
+    
+    // Establecer fecha por defecto como hoy
+    document.getElementById('fecha_corte').value = today;
 }); 

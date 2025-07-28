@@ -1,5 +1,15 @@
 const cajaService = require('../services/cajaService');
 
+exports.getCortes = async (req, res) => {
+  try {
+    const cortes = await cajaService.listarCajas();
+    res.json(cortes);
+  } catch (error) {
+    console.error('Error en getCortes:', error);
+    res.status(500).json({ message: 'Error al consultar cortes de caja', error: error.message });
+  }
+};
+
 exports.getCortePorFecha = async (req, res) => {
   const { fecha } = req.params;
   try {
@@ -31,6 +41,7 @@ exports.registrarCorte = async (req, res) => {
     const corte = await cajaService.registrarCorte(req.body, req.user);
     res.status(201).json(corte);
   } catch (error) {
-    res.status(500).json({ message: 'Error al registrar corte de caja', error });
+    console.error('Error en registrarCorte:', error);
+    res.status(500).json({ message: 'Error al registrar corte de caja', error: error.message });
   }
 };

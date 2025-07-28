@@ -16,11 +16,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Rutas
 app.use('/api/productos', require('./routes/productosRoutes'));
-app.use('/api/login', require('./routes/authRoutes'));
+app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/venta', require('./routes/ventaRoutes'));
-app.use('/api/inventario', require('./routes/inventarioRoutes'));
 app.use('/api/caja', require('./routes/cajaRoutes'));
 app.use('/api/promociones', require('./routes/promocionRoutes'));
+app.use('/api/proveedores', require('./routes/proveedoresRoutes'));
 
 // Swagger config
 const swaggerOptions = {

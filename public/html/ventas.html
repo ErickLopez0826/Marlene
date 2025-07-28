@@ -3,148 +3,697 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrar Venta</title>
+    <title>Registrar Venta - Tienda de Abarrotes</title>
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        .ventas-container {
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 32px 24px;
-            background: #fff;
+        .ventas-page {
+            min-height: 100vh;
+            background: var(--light-gray);
+            padding: 20px;
+        }
+        
+        .ventas-header {
+            background: var(--pure-white);
+            padding: 20px 30px;
             border-radius: 16px;
-            box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .ventas-title {
-            text-align: center;
-            margin-bottom: 32px;
+        
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--soft-black);
+            font-size: 1.8rem;
+            font-weight: 700;
         }
-        .productos-table, .carrito-table {
+        
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .btn-historial {
+            background: var(--bright-blue);
+            color: var(--pure-white);
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-historial:hover {
+            background: var(--hover-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 97, 242, 0.3);
+        }
+        
+        .ventas-container {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .productos-section {
+            background: var(--pure-white);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        
+        .productos-header {
+            padding: 24px 30px;
+            border-bottom: 2px solid var(--light-gray);
+        }
+        
+        .productos-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .search-container {
+            position: relative;
+            flex: 1;
+            max-width: 400px;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 12px 16px 12px 45px;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--coca-cola-red);
+            box-shadow: 0 0 0 3px rgba(228, 0, 43, 0.1);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--dark-gray);
+        }
+        
+        .productos-count {
+            color: var(--dark-gray);
+            font-weight: 500;
+        }
+        
+        .productos-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 32px;
         }
-        .productos-table th, .productos-table td, .carrito-table th, .carrito-table td {
-            padding: 12px 8px;
-            border-bottom: 1px solid #e0e0e0;
+        
+        .productos-table th {
+            background: var(--light-gray);
+            padding: 16px 12px;
             text-align: left;
+            font-weight: 600;
+            color: var(--soft-black);
+            border-bottom: 2px solid #E0E0E0;
         }
-        .productos-table th, .carrito-table th {
-            background: var(--primary-light, #f5f6fa);
+        
+        .productos-table td {
+            padding: 16px 12px;
+            border-bottom: 1px solid #E0E0E0;
+            transition: background 0.2s ease;
         }
-        .productos-table tr:hover, .carrito-table tr:hover {
-            background: #f8fafc;
-            transition: background 0.2s;
+        
+        .productos-table tr:hover {
+            background: var(--light-gray);
         }
-        .btn {
-            padding: 7px 18px;
+        
+        .producto-nombre {
+            font-weight: 600;
+            color: var(--soft-black);
+        }
+        
+        .producto-precio {
+            font-weight: 600;
+            color: var(--coca-cola-red);
+        }
+        
+        .producto-stock {
+            font-weight: 500;
+        }
+        
+        .stock-bajo { color: #e74c3c; }
+        .stock-medio { color: #f39c12; }
+        .stock-alto { color: #27ae60; }
+        
+        .cantidad-input {
+            width: 80px;
+            padding: 8px 12px;
+            border: 2px solid #E0E0E0;
             border-radius: 6px;
+            font-size: 0.9rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .cantidad-input:focus {
+            outline: none;
+            border-color: var(--coca-cola-red);
+        }
+        
+        .btn-agregar {
+            background: #27ae60;
+            color: var(--pure-white);
             border: none;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .btn-agregar:hover {
+            background: #219a52;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+        }
+        
+        .pagination-container {
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 2px solid var(--light-gray);
+        }
+        
+        .pagination-info {
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+        }
+        
+        .pagination-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        
+        .pagination-btn {
+            padding: 8px 12px;
+            border: 2px solid #E0E0E0;
+            background: var(--pure-white);
+            color: var(--dark-gray);
+            border-radius: 6px;
+            font-size: 0.9rem;
             font-weight: 500;
             cursor: pointer;
-            margin-right: 6px;
-            transition: background 0.15s, color 0.15s;
+            transition: all 0.3s ease;
         }
-        .btn-add {
-            background: #27ae60;
-            color: #fff;
+        
+        .pagination-btn:hover {
+            border-color: var(--coca-cola-red);
+            color: var(--coca-cola-red);
         }
-        .btn-add:hover {
-            background: #219150;
+        
+        .pagination-btn.active {
+            background: var(--coca-cola-red);
+            color: var(--pure-white);
+            border-color: var(--coca-cola-red);
         }
-        .btn-remove {
-            background: #e74c3c;
-            color: #fff;
+        
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
-        .btn-remove:hover {
-            background: #c0392b;
-        }
-        .form-row {
+        
+        #page-numbers {
             display: flex;
-            gap: 16px;
-            margin-bottom: 12px;
+            gap: 4px;
+            align-items: center;
         }
-        .form-row label {
-            min-width: 120px;
-            font-weight: 500;
+        
+        /* Resumen de Venta */
+        .resumen-section {
+            background: var(--pure-white);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 20px;
+            height: fit-content;
         }
-        .form-row input, .form-row select {
+        
+        .resumen-header {
+            padding: 24px 30px;
+            border-bottom: 2px solid var(--light-gray);
+            text-align: center;
+        }
+        
+        .resumen-title {
+            color: var(--soft-black);
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .resumen-subtitle {
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+        }
+        
+        .resumen-content {
+            padding: 24px 30px;
+        }
+        
+        .carrito-items {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+        
+        .carrito-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #E0E0E0;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .carrito-item:last-child {
+            border-bottom: none;
+        }
+        
+        .item-info {
             flex: 1;
-            padding: 7px 10px;
-            border-radius: 5px;
-            border: 1px solid #d0d0d0;
-            font-size: 1rem;
         }
-        .venta-actions {
-            text-align: right;
-            margin-top: 18px;
+        
+        .item-nombre {
+            font-weight: 600;
+            color: var(--soft-black);
+            margin-bottom: 4px;
         }
-        .error-message {
-            color: #e74c3c;
-            margin-bottom: 10px;
-            text-align: center;
+        
+        .item-details {
+            font-size: 0.9rem;
+            color: var(--dark-gray);
         }
-        .success-message {
-            color: #27ae60;
-            margin-bottom: 10px;
-            text-align: center;
+        
+        .item-cantidad {
+            background: var(--light-gray);
+            color: var(--soft-black);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
         }
+        
+        .item-subtotal {
+            font-weight: 600;
+            color: var(--coca-cola-red);
+        }
+        
+        .btn-quitar {
+            background: #e74c3c;
+            color: var(--pure-white);
+            border: none;
+            border-radius: 4px;
+            padding: 6px 10px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-quitar:hover {
+            background: #c0392b;
+            transform: scale(1.05);
+        }
+        
+        .resumen-total {
+            border-top: 2px solid var(--light-gray);
+            padding-top: 20px;
+            margin-top: 20px;
+        }
+        
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
         .total-label {
-            font-weight: bold;
+            font-weight: 600;
+            color: var(--soft-black);
+        }
+        
+        .total-amount {
+            font-weight: 700;
+            color: var(--coca-cola-red);
+            font-size: 1.2rem;
+        }
+        
+        .resumen-actions {
+            margin-top: 24px;
+        }
+        
+        .forma-pago-container {
+            margin-bottom: 16px;
+        }
+        
+        .forma-pago-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--soft-black);
+        }
+        
+        .forma-pago-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+        
+        .forma-pago-select:focus {
+            outline: none;
+            border-color: var(--coca-cola-red);
+        }
+        
+        .btn-finalizar {
+            width: 100%;
+            background: var(--coca-cola-red);
+            color: var(--pure-white);
+            border: none;
+            border-radius: 8px;
+            padding: 16px;
             font-size: 1.1rem;
-            text-align: right;
-            margin-top: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-finalizar:hover {
+            background: var(--hover-red);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(228, 0, 43, 0.3);
+        }
+        
+        .btn-finalizar:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Modal de Historial */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-content {
+            background-color: var(--pure-white);
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        
+        .modal-header {
+            background: var(--coca-cola-red);
+            color: var(--pure-white);
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+        
+        .close {
+            color: var(--pure-white);
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+        
+        .close:hover {
+            opacity: 0.7;
+        }
+        
+        .modal-body {
+            padding: 30px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+        
+        .historial-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .historial-table th {
+            background: var(--light-gray);
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--soft-black);
+        }
+        
+        .historial-table td {
+            padding: 12px;
+            border-bottom: 1px solid #E0E0E0;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .ventas-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .resumen-section {
+                position: static;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .ventas-header {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+            
+            .productos-toolbar {
+                flex-direction: column;
+                gap: 16px;
+            }
+            
+            .search-container {
+                max-width: 100%;
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .empty-cart {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--dark-gray);
+        }
+        
+        .empty-cart i {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            opacity: 0.5;
         }
     </style>
 </head>
 <body>
-    <div class="ventas-container">
-        <h1 class="ventas-title">Registrar Venta</h1>
-        <div class="error-message" id="venta-error"></div>
-        <div class="success-message" id="venta-success"></div>
-        <h2>Productos</h2>
-        <table class="productos-table" id="productos-table">
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Marca</th>
-                    <th>Presentación</th>
-                    <th>Precio</th>
-                    <th>Stock</th>
-                    <th>Cantidad</th>
-                    <th>Agregar</th>
-                </tr>
-            </thead>
-            <tbody id="productos-tbody">
-                <!-- Productos aquí -->
-            </tbody>
-        </table>
-        <h2>Carrito</h2>
-        <table class="carrito-table" id="carrito-table">
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Cantidad</th>
-                    <th>Precio Unitario</th>
-                    <th>Subtotal</th>
-                    <th>Quitar</th>
-                </tr>
-            </thead>
-            <tbody id="carrito-tbody">
-                <!-- Carrito aquí -->
-            </tbody>
-        </table>
-        <div class="total-label" id="total-label">Total: $0.00</div>
-        <div class="venta-actions">
-            <label for="forma_pago">Forma de pago:</label>
-            <select id="forma_pago">
-                <option value="Efectivo">Efectivo</option>
-                <option value="Transferencia">Transferencia</option>
-                <option value="Mixto">Mixto</option>
-            </select>
-            <button class="btn btn-add" id="registrar-venta-btn">Registrar Venta</button>
-            <button class="btn" onclick="location.href='/html/dashboard.html'">Volver al Dashboard</button>
+    <div class="ventas-page">
+        <!-- Header -->
+        <header class="ventas-header">
+            <div class="header-title">
+                <i class="fas fa-cash-register"></i>
+                Registrar Venta
+            </div>
+            <div class="header-actions">
+                <button class="btn-historial" onclick="abrirHistorial()">
+                    <i class="fas fa-history"></i>
+                    Historial de Ventas
+                </button>
+                <button class="nav-btn" onclick="location.href='/html/dashboard.html'">
+                    <i class="fas fa-arrow-left"></i>
+                    Volver al Panel
+                </button>
+            </div>
+        </header>
+        
+        <!-- Contenedor Principal -->
+        <div class="ventas-container">
+            <!-- Sección de Productos -->
+            <section class="productos-section">
+                <div class="productos-header">
+                    <div class="productos-toolbar">
+                        <div class="search-container">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" class="search-input" id="search-input" placeholder="Buscar productos por nombre...">
+                        </div>
+                        <div class="productos-count" id="productos-count">
+                            0 productos encontrados
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="table-wrapper">
+                    <table class="productos-table" id="productos-table">
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-tag"></i> Nombre</th>
+                                <th><i class="fas fa-industry"></i> Marca</th>
+                                <th><i class="fas fa-truck"></i> Proveedor</th>
+                                <th><i class="fas fa-dollar-sign"></i> Precio</th>
+                                <th><i class="fas fa-warehouse"></i> Stock</th>
+                                <th><i class="fas fa-sort-numeric-up"></i> Cantidad</th>
+                                <th><i class="fas fa-plus"></i> Agregar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productos-tbody">
+                            <!-- Productos aquí -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="pagination-container">
+                    <div class="pagination-info" id="pagination-info">
+                        Mostrando 0 a 0 de 0 productos
+                    </div>
+                    <div class="pagination-controls">
+                        <button class="pagination-btn" id="prev-btn" onclick="irAPagina(currentPage - 1)">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <div id="page-numbers"></div>
+                        <button class="pagination-btn" id="next-btn" onclick="irAPagina(currentPage + 1)">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Resumen de Venta -->
+            <section class="resumen-section">
+                <div class="resumen-header">
+                    <h2 class="resumen-title">
+                        <i class="fas fa-shopping-cart"></i>
+                        Resumen de Venta
+                    </h2>
+                    <p class="resumen-subtitle">Productos agregados al carrito</p>
+                </div>
+                
+                <div class="resumen-content">
+                    <div class="carrito-items" id="carrito-items">
+                        <div class="empty-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                            <p>No hay productos en el carrito</p>
+                            <p>Agrega productos para comenzar la venta</p>
+                        </div>
+                    </div>
+                    
+                    <div class="resumen-total">
+                        <div class="total-row">
+                            <span class="total-label">Subtotal:</span>
+                            <span class="total-amount" id="subtotal">$0.00</span>
+                        </div>
+                        <div class="total-row">
+                            <span class="total-label">Total:</span>
+                            <span class="total-amount" id="total">$0.00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="resumen-actions">
+                        <div class="forma-pago-container">
+                            <label class="forma-pago-label" for="forma_pago">
+                                <i class="fas fa-credit-card"></i> Forma de Pago:
+                            </label>
+                            <select class="forma-pago-select" id="forma_pago">
+                                <option value="Efectivo">Efectivo</option>
+                                <option value="Transferencia">Transferencia</option>
+                                <option value="Mixto">Mixto</option>
+                            </select>
+                        </div>
+                        
+                        <button class="btn-finalizar" id="finalizar-venta-btn" disabled>
+                            <i class="fas fa-check"></i>
+                            Finalizar Venta
+                        </button>
+                    </div>
+                </div>
+            </section>
         </div>
     </div>
+    
+    <!-- Modal de Historial -->
+    <div id="historial-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fas fa-history"></i>
+                    Historial de Ventas
+                </h2>
+                <span class="close" onclick="cerrarHistorial()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="historial-content">
+                    <!-- Contenido del historial aquí -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <script src="/js/ventas.js"></script>
 </body>
 </html> 

@@ -5,6 +5,23 @@ const router = express.Router();
 
 /**
  * @swagger
+ * /api/caja:
+ *   get:
+ *     summary: Obtiene todos los cortes de caja
+ *     tags:
+ *       - Caja
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de cortes de caja
+ *       401:
+ *         description: No autorizado
+ */
+router.get('/', authMiddleware, cajaController.getCortes);
+
+/**
+ * @swagger
  * /api/caja/{id}:
  *   get:
  *     summary: Consulta el corte de caja por ID

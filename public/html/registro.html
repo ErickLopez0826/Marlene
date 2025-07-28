@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Usuario - Tienda de Abarrotes</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Estilos específicos para la página de registro */
+        body {
+            background: linear-gradient(135deg, var(--light-gray) 0%, #E8E8E8 100%);
+            position: relative;
+            overflow-x: hidden;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        /* Fondo con imagen sutil */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="%23E4002B" opacity="0.03"/><circle cx="20" cy="20" r="0.5" fill="%23E4002B" opacity="0.02"/><circle cx="80" cy="80" r="0.5" fill="%23E4002B" opacity="0.02"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .register-page-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+        }
+        
+        .register-card {
+            background: var(--pure-white);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            padding: 3rem;
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+            overflow: hidden;
+            animation: slideInUp 0.6s ease-out;
+        }
+        
+        .register-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--coca-cola-red), var(--bright-blue));
+        }
+        
+        .register-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        
+        .register-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--coca-cola-red), var(--hover-red));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 8px 25px rgba(228, 0, 43, 0.3);
+        }
+        
+        .register-logo i {
+            font-size: 2rem;
+            color: var(--pure-white);
+        }
+        
+        .register-title {
+            color: var(--soft-black);
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+        
+        .register-subtitle {
+            color: var(--dark-gray);
+            font-size: 1rem;
+            font-weight: 400;
+        }
+        
+        .register-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .input-group {
+            position: relative;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 0.75rem;
+            color: var(--soft-black);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        
+        .input-container {
+            position: relative;
+        }
+        
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 1rem 3rem 1rem 3rem;
+            border: 2px solid #E0E0E0;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            background-color: var(--pure-white);
+            box-sizing: border-box;
+        }
+        
+        .input-group input:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: var(--coca-cola-red);
+            box-shadow: 0 0 0 4px rgba(228, 0, 43, 0.1);
+        }
+        
+        .input-group input.error,
+        .input-group select.error {
+            border-color: var(--coca-cola-red);
+            background-color: rgba(228, 0, 43, 0.05);
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--dark-gray);
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .input-group input:focus + .input-icon,
+        .input-group select:focus + .input-icon {
+            color: var(--coca-cola-red);
+        }
+        
+        /* Contenedor para el campo de contraseña */
+        .password-container {
+            position: relative;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--dark-gray);
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding: 0;
+            width: auto;
+            transition: color 0.3s ease;
+            z-index: 2;
+        }
+        
+        .password-toggle:hover {
+            color: var(--coca-cola-red);
+        }
+        
+        .password-toggle:focus {
+            outline: none;
+        }
+        
+        .register-button {
+            background: linear-gradient(135deg, var(--coca-cola-red), var(--hover-red));
+            color: var(--pure-white);
+            padding: 1rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+        
+        .register-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(228, 0, 43, 0.4);
+        }
+        
+        .register-button:active {
+            transform: translateY(0);
+        }
+        
+        .register-button.loading {
+            pointer-events: none;
+        }
+        
+        .register-button.loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            margin-left: -10px;
+            margin-top: -10px;
+            border: 2px solid transparent;
+            border-top: 2px solid var(--pure-white);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        .register-button.loading span {
+            opacity: 0;
+        }
+        
+        .login-link {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #E0E0E0;
+        }
+        
+        .login-link-text {
+            color: var(--dark-gray);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+        
+        .login-link-button {
+            background: transparent;
+            color: var(--bright-blue);
+            border: 2px solid var(--bright-blue);
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 500;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .login-link-button:hover {
+            background: var(--bright-blue);
+            color: var(--pure-white);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(0, 97, 242, 0.3);
+        }
+        
+        .error-message {
+            color: var(--coca-cola-red);
+            text-align: center;
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background-color: rgba(228, 0, 43, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid var(--coca-cola-red);
+            font-weight: 500;
+            display: none;
+        }
+        
+        .field-error {
+            color: var(--coca-cola-red);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+        
+        .success-message {
+            color: #27ae60;
+            text-align: center;
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background-color: rgba(39, 174, 96, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid #27ae60;
+            font-weight: 500;
+            display: none;
+        }
+        
+        /* Animaciones */
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .register-page-container {
+                padding: 1rem;
+            }
+            
+            .register-card {
+                padding: 2rem;
+                border-radius: 20px;
+            }
+            
+            .register-title {
+                font-size: 1.5rem;
+            }
+            
+            .register-logo {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .register-logo i {
+                font-size: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .register-card {
+                padding: 1.5rem;
+            }
+            
+            .register-title {
+                font-size: 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="register-page-container">
+        <div class="register-card fade-in">
+            <div class="register-header">
+                <div class="register-logo">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <h1 class="register-title">Registro de Usuario</h1>
+                <p class="register-subtitle">Crea tu cuenta para acceder al punto de venta</p>
+            </div>
+            
+            <form id="register-form" class="register-form">
+                <div class="input-group">
+                    <label for="nombre">
+                        <i class="fas fa-user"></i> Nombre Completo
+                    </label>
+                    <div class="input-container">
+                        <input type="text" id="nombre" name="nombre" required autocomplete="name" placeholder="Ingresa tu nombre completo">
+                        <i class="fas fa-user input-icon"></i>
+                    </div>
+                    <div class="field-error" id="nombre-error"></div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="rol">
+                        <i class="fas fa-user-tag"></i> Rol
+                    </label>
+                    <div class="input-container">
+                        <select id="rol" name="rol" required>
+                            <option value="">Selecciona un rol</option>
+                            <option value="Admin">Administrador</option>
+                            <option value="Cajero">Cajero</option>
+                            <option value="Supervisor">Supervisor</option>
+                        </select>
+                        <i class="fas fa-user-tag input-icon"></i>
+                    </div>
+                    <div class="field-error" id="rol-error"></div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="usuario">
+                        <i class="fas fa-at"></i> Nombre de Usuario
+                    </label>
+                    <div class="input-container">
+                        <input type="text" id="usuario" name="usuario" required autocomplete="username" placeholder="Ingresa tu nombre de usuario">
+                        <i class="fas fa-at input-icon"></i>
+                    </div>
+                    <div class="field-error" id="usuario-error"></div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="contrasenha">
+                        <i class="fas fa-lock"></i> Contraseña
+                    </label>
+                    <div class="password-container">
+                        <input type="password" id="contrasenha" name="contrasenha" required autocomplete="new-password" placeholder="Ingresa tu contraseña">
+                        <i class="fas fa-lock input-icon"></i>
+                        <button type="button" class="password-toggle" id="password-toggle">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="field-error" id="contrasenha-error"></div>
+                </div>
+                
+                <button type="submit" class="register-button" id="register-button">
+                    <span>Registrar Cuenta</span>
+                </button>
+                
+                <div id="error-message" class="error-message"></div>
+                <div id="success-message" class="success-message"></div>
+            </form>
+            
+            <div class="login-link">
+                <p class="login-link-text">¿Ya tienes una cuenta?</p>
+                <a href="/html/login.html" class="login-link-button">
+                    <i class="fas fa-sign-in-alt"></i> Inicia sesión
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <script src="/js/registro.js"></script>
+</body>
+</html> 

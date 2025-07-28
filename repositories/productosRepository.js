@@ -1,24 +1,33 @@
-function aumentarStock(ID_Producto, cantidad) {
-  return new Promise((resolve, reject) => {
-    const sql = 'UPDATE producto SET Stock_Total = Stock_Total + ? WHERE ID_Producto = ?';
-    db.query(sql, [cantidad, ID_Producto], (err, result) => {
-      if (err) return reject(err);
-      resolve(result);
-    });
-  });
-}
-
 const db = require('../config/db');
 
+async function aumentarStock(ID_Producto, cantidad) {
+  try {
+    console.log(`📈 Aumentando stock del producto ${ID_Producto} en ${cantidad}`);
+    
+    const sql = 'UPDATE producto SET Stock_Total = Stock_Total + ? WHERE ID_Producto = ?';
+    const [result] = await db.promise.query(sql, [cantidad, ID_Producto]);
+    
+    console.log('✅ Stock aumentado exitosamente');
+    return result;
+  } catch (error) {
+    console.error('❌ Error en aumentarStock:', error);
+    throw error;
+  }
+}
 
-function descontarStock(ID_Producto, cantidad) {
-  return new Promise((resolve, reject) => {
+async function descontarStock(ID_Producto, cantidad) {
+  try {
+    console.log(`📉 Descontando stock del producto ${ID_Producto} en ${cantidad}`);
+    
     const sql = 'UPDATE producto SET Stock_Total = Stock_Total - ? WHERE ID_Producto = ?';
-    db.query(sql, [cantidad, ID_Producto], (err, result) => {
-      if (err) return reject(err);
-      resolve(result);
-    });
-  });
+    const [result] = await db.promise.query(sql, [cantidad, ID_Producto]);
+    
+    console.log('✅ Stock descontado exitosamente');
+    return result;
+  } catch (error) {
+    console.error('❌ Error en descontarStock:', error);
+    throw error;
+  }
 }
 
 function actualizarProducto(id, productoData) {
@@ -34,7 +43,7 @@ function actualizarProducto(id, productoData) {
     if (campos.length === 0) return resolve(null);
     const sql = `UPDATE producto SET ${campos.join(', ')} WHERE ID_Producto = ? AND Activo = 1`;
     valores.push(id);
-    db.query(sql, valores, (err, result) => {
+    db.pool.query(sql, valores, (err, result) => {
       if (err) return reject(err);
       resolve({ ID_Producto: id, ...productoData });
     });
@@ -56,25 +65,41 @@ function insertarProducto(productoData) {
       productoData.Fecha_Caducidad || null,
       productoData.ID_Proveedor
     ];
-    db.query(sql, values, (err, result) => {
+    db.pool.query(sql, values, (err, result) => {
       if (err) return reject(err);
       resolve({ ID_Producto: result.insertId, ...productoData });
     });
   });
 }
 
-function buscarPorId(id) {
-  return new Promise((resolve, reject) => {
-    db.query('SELECT * FROM producto WHERE ID_Producto = ?', [id], (err, results) => {
-      if (err) return reject(err);
-      resolve(results[0]);
-    });
-  });
+async function buscarPorId(id) {
+  try {
+    console.log(`🔍 Buscando producto por ID: ${id}`);
+    
+    const [results] = await db.promise.query('SELECT * FROM producto WHERE ID_Producto = ?', [id]);
+    
+    if (results.length > 0) {
+      console.log('✅ Producto encontrado:', results[0].Nombre);
+      return results[0];
+    } else {
+      console.log('❌ Producto no encontrado');
+      return null;
+    }
+  } catch (error) {
+    console.error('❌ Error en buscarPorId:', error);
+    throw error;
+  }
 }
 
 function listarActivos() {
   return new Promise((resolve, reject) => {
-    db.query('SELECT * FROM producto WHERE LOWER(Activo) = "1"', (err, results) => {
+    const sql = `
+      SELECT p.*, pr.Nombre as Nombre_Proveedor 
+      FROM producto p 
+      LEFT JOIN proveedor pr ON p.ID_Proveedor = pr.ID_Proveedor 
+      WHERE LOWER(p.Activo) = "1"
+    `;
+    db.pool.query(sql, (err, results) => {
       if (err) return reject(err);
       resolve(results);
     });

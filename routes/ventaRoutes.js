@@ -5,35 +5,11 @@ const router = express.Router();
 
 /**
  * @swagger
- * /api/venta/{id}:
- *   get:
- *     summary: Obtiene una venta por ID
- *     tags:
- *       - Venta
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID de la venta
- *     responses:
- *       200:
- *         description: Venta encontrada
- *       404:
- *         description: Venta no encontrada
- */
-router.get('/:id', authMiddleware, ventaController.getVentaPorId);
-
-/**
- * @swagger
  * /api/venta:
  *   post:
- *     summary: Crea una nueva venta
+ *     summary: Registra una nueva venta
  *     tags:
- *       - Venta
+ *       - Ventas
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -54,13 +30,58 @@ router.get('/:id', authMiddleware, ventaController.getVentaPorId);
  *                       type: integer
  *               forma_pago:
  *                 type: string
- *                 example: "Efectivo"
+ *                 enum: [Efectivo, Transferencia, Mixto]
  *     responses:
  *       201:
- *         description: Venta creada
+ *         description: Venta registrada exitosamente
  *       400:
  *         description: Datos inválidos
+ *       500:
+ *         description: Error del servidor
  */
-router.post('/', authMiddleware, ventaController.crearVenta);
+router.post('/', authMiddleware, ventaController.registrarVenta);
+
+/**
+ * @swagger
+ * /api/venta/historial:
+ *   get:
+ *     summary: Obtiene el historial de ventas
+ *     tags:
+ *       - Ventas
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Historial de ventas obtenido exitosamente
+ *       500:
+ *         description: Error del servidor
+ */
+router.get('/historial', authMiddleware, ventaController.getHistorialVentas);
+
+/**
+ * @swagger
+ * /api/venta/{id}/detalle:
+ *   get:
+ *     summary: Obtiene el detalle de una venta específica
+ *     tags:
+ *       - Ventas
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID de la venta
+ *     responses:
+ *       200:
+ *         description: Detalle de venta obtenido exitosamente
+ *       404:
+ *         description: Venta no encontrada
+ *       500:
+ *         description: Error del servidor
+ */
+router.get('/:id/detalle', authMiddleware, ventaController.getDetalleVenta);
 
 module.exports = router;

@@ -3,187 +3,803 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Promociones</title>
+    <title>Gestión de Promociones - Tienda de Abarrotes</title>
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        .promo-container {
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 32px 24px;
-            background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+        /* Variables de colores */
+        :root {
+            --coca-cola-red: #E4002B;
+            --hover-red: #C4002B;
+            --bright-blue: #0061F2;
+            --hover-blue: #0056D6;
+            --pure-white: #FFFFFF;
+            --light-gray: #F5F5F5;
+            --soft-black: #222222;
+            --dark-gray: #666666;
         }
-        .promo-title {
-            text-align: center;
-            margin-bottom: 32px;
+
+        /* Estilos generales */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .form-section {
-            margin-bottom: 32px;
-            background: var(--primary-light, #f5f6fa);
-            padding: 20px 18px;
-            border-radius: 10px;
-            transition: opacity 0.5s, max-height 0.5s;
-            opacity: 1;
-            max-height: 1000px;
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--light-gray);
+            color: var(--soft-black);
+            line-height: 1.6;
         }
-        .form-section.hide {
-            opacity: 0;
-            max-height: 0;
-            overflow: hidden;
+
+        /* Header */
+        .promociones-header {
+            background: var(--coca-cola-red);
+            color: var(--pure-white);
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 20px rgba(228, 0, 43, 0.3);
         }
-        .form-row {
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
             display: flex;
-            gap: 16px;
-            margin-bottom: 12px;
+            justify-content: space-between;
+            align-items: center;
         }
-        .form-row label {
-            min-width: 120px;
+
+        .header-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--pure-white);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
             font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
-        .form-row input, .form-row select {
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* Contenedor principal */
+        .promociones-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            min-height: calc(100vh - 200px);
+        }
+
+        /* Columna izquierda - Formulario */
+        .form-section {
+            background: var(--pure-white);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 2rem;
+            height: fit-content;
+        }
+
+        .form-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--soft-black);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: var(--soft-black);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            background: var(--pure-white);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--coca-cola-red);
+            box-shadow: 0 0 0 3px rgba(228, 0, 43, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        /* Columna derecha - Lista de productos */
+        .productos-section {
+            background: var(--pure-white);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .productos-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .productos-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--soft-black);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .search-container {
+            position: relative;
             flex: 1;
-            padding: 7px 10px;
-            border-radius: 5px;
-            border: 1px solid #d0d0d0;
+            max-width: 300px;
+            margin-left: 1rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 2.5rem;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--bright-blue);
+            box-shadow: 0 0 0 3px rgba(0, 97, 242, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--dark-gray);
+        }
+
+        /* Grid de productos */
+        .productos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .producto-card {
+            background: var(--pure-white);
+            border: 2px solid #E0E0E0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .producto-card:hover {
+            border-color: var(--bright-blue);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 97, 242, 0.15);
+        }
+
+        .producto-card.selected {
+            border-color: var(--coca-cola-red);
+            background: rgba(228, 0, 43, 0.05);
+        }
+
+        .producto-checkbox {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 20px;
+            height: 20px;
+            accent-color: var(--coca-cola-red);
+        }
+
+        .producto-info {
+            margin-top: 0.5rem;
+        }
+
+        .producto-nombre {
+            font-weight: 600;
+            color: var(--soft-black);
+            margin-bottom: 0.5rem;
             font-size: 1rem;
         }
-        .form-actions {
-            text-align: right;
+
+        .producto-presentacion {
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
         }
-        .form-actions .btn {
-            margin-left: 8px;
+
+        .producto-precio {
+            font-weight: 600;
+            color: var(--coca-cola-red);
+            font-size: 1.1rem;
         }
-        .error-message {
-            color: #e74c3c;
-            margin-bottom: 10px;
-            text-align: center;
+
+        /* Paginación */
+        .pagination-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #E0E0E0;
+        }
+
+        .pagination-info {
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+        }
+
+        .pagination-controls {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .pagination-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #E0E0E0;
+            background: var(--pure-white);
+            color: var(--dark-gray);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .pagination-btn:hover {
+            border-color: var(--bright-blue);
+            color: var(--bright-blue);
+        }
+
+        .pagination-btn.active {
+            background: var(--bright-blue);
+            color: var(--pure-white);
+            border-color: var(--bright-blue);
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Botón flotante de guardar */
+        .floating-save-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--coca-cola-red);
+            color: var(--pure-white);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(228, 0, 43, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 1000;
+        }
+
+        .floating-save-btn:hover {
+            background: var(--hover-red);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(228, 0, 43, 0.4);
+        }
+
+        .floating-save-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Mensajes */
+        .message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-weight: 500;
             opacity: 0;
-            transition: opacity 0.4s;
+            transition: opacity 0.3s ease;
         }
-        .error-message.visible {
+
+        .message.show {
             opacity: 1;
         }
-        .success-message {
+
+        .message.success {
+            background: rgba(39, 174, 96, 0.1);
             color: #27ae60;
-            margin-bottom: 10px;
+            border: 1px solid rgba(39, 174, 96, 0.3);
+        }
+
+        .message.error {
+            background: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+            border: 1px solid rgba(231, 76, 60, 0.3);
+        }
+
+        /* Productos seleccionados */
+        .selected-products {
+            min-height: 60px;
+            padding: 1rem;
+            border: 2px dashed #E0E0E0;
+            border-radius: 8px;
+            background: var(--light-gray);
+        }
+
+        .no-selection {
+            color: var(--dark-gray);
+            font-style: italic;
             text-align: center;
-            opacity: 0;
-            transition: opacity 0.4s;
+            margin: 0;
         }
-        .success-message.visible {
-            opacity: 1;
+
+        .selected-products-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
         }
-        .promo-cards {
+
+        .selected-product-tag {
+            background: var(--coca-cola-red);
+            color: var(--pure-white);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .promociones-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .form-section {
+                position: static;
+            }
+
+            .productos-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+
+            .search-container {
+                max-width: none;
+                margin-left: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .promociones-container {
+                padding: 0 1rem;
+                margin: 1rem auto;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .productos-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .floating-save-btn {
+                bottom: 1rem;
+                right: 1rem;
+                padding: 0.8rem 1.5rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Sección de Promociones Existentes */
+        .promociones-existentes-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .promociones-existentes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .promociones-existentes-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--soft-black);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .promociones-search-container {
+            position: relative;
+            flex: 1;
+            max-width: 300px;
+            margin-left: 1rem;
+        }
+
+        .promociones-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 24px;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
-        .promo-card {
-            background: var(--primary-light, #f5f6fa);
+
+        .promocion-card {
+            background: var(--pure-white);
+            border: 2px solid #E0E0E0;
             border-radius: 12px;
-            padding: 24px 18px;
-            box-shadow: 0 1px 8px rgba(0,0,0,0.07);
-            transition: transform 0.18s, box-shadow 0.18s;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeInUp 0.6s forwards;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
         }
-        .promo-card:hover {
-            transform: translateY(-6px) scale(1.03);
-            box-shadow: 0 4px 18px rgba(0,0,0,0.13);
+
+        .promocion-card:hover {
+            border-color: var(--bright-blue);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 97, 242, 0.15);
         }
+
+        .promocion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .promocion-titulo {
+            font-weight: 600;
+            color: var(--soft-black);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .promocion-estado {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .promocion-activa {
+            background: rgba(39, 174, 96, 0.1);
+            color: #27ae60;
+            border: 1px solid rgba(39, 174, 96, 0.3);
+        }
+
+        .promocion-inactiva {
+            background: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+            border: 1px solid rgba(231, 76, 60, 0.3);
+        }
+
+        .promocion-fechas {
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .promocion-detalles {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .promocion-detalle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .promocion-detalle-label {
+            font-weight: 600;
+            color: var(--dark-gray);
+        }
+
+        .promocion-detalle-valor {
+            color: var(--coca-cola-red);
+            font-weight: 600;
+        }
+
+        .promocion-productos {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #E0E0E0;
+        }
+
+        .promocion-productos-titulo {
+            font-weight: 600;
+            color: var(--soft-black);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .promocion-productos-lista {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+        }
+
+        .promocion-producto-tag {
+            background: var(--light-gray);
+            color: var(--dark-gray);
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+
+        .promociones-pagination-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #E0E0E0;
+        }
+
+        .promociones-pagination-info {
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+        }
+
+        .promociones-pagination-controls {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        /* Responsive para promociones existentes */
+        @media (max-width: 1024px) {
+            .promociones-existentes-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+
+            .promociones-search-container {
+                max-width: none;
+                margin-left: 0;
+            }
+
+            .promociones-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .promociones-existentes-container {
+                padding: 0 1rem;
+            }
+
+            .promociones-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .promocion-detalles {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animaciones */
         @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
-        .promo-card-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 8px;
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease;
         }
-        .promo-card-dates {
-            font-size: 0.98rem;
-            color: #555;
-            margin-bottom: 8px;
+
+        /* Loading */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--pure-white);
+            animation: spin 1s ease-in-out infinite;
         }
-        .promo-card-products {
-            font-size: 0.97rem;
-            margin-bottom: 6px;
-        }
-        .btn-toggle-form {
-            margin-bottom: 18px;
-            background: #2980b9;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            padding: 10px 18px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.15s;
-        }
-        .btn-toggle-form:hover {
-            background: #1c5d8c;
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-    <div class="promo-container">
-        <h1 class="promo-title">Promociones</h1>
-        <button class="btn-toggle-form" id="toggle-form-btn">Registrar Nueva Promoción</button>
-        <div class="form-section" style="margin-bottom:18px;">
-            <form id="consulta-promo-form" style="display:flex;gap:12px;align-items:center;">
-                <label for="consulta-promo-id" style="margin:0;">Consultar promoción por ID:</label>
-                <input type="number" id="consulta-promo-id" name="consulta-promo-id" min="1" style="width:100px;">
-                <button type="submit" class="btn">Buscar</button>
-                <span id="consulta-promo-error" class="error-message" style="margin:0;"></span>
+    <header class="promociones-header">
+        <h1><i class="fas fa-tags"></i> Gestión de Promociones</h1>
+        <a href="/html/dashboard.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Volver al Panel
+        </a>
+    </header>
+
+    <div class="promociones-container">
+        <section class="form-section fade-in-up">
+            <h2 class="form-title"><i class="fas fa-plus-circle"></i> Crear Nueva Promoción</h2>
+            <div id="form-messages"></div>
+            <form id="promocion-form">
+                <div class="form-group">
+                    <label for="descripcion"><i class="fas fa-tag"></i> Descripción de la Promoción</label>
+                    <input type="text" id="descripcion" name="descripcion" required placeholder="Ej: Descuento 20% en bebidas">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fecha_inicio"><i class="fas fa-calendar-alt"></i> Fecha de Inicio</label>
+                        <input type="date" id="fecha_inicio" name="fecha_inicio" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fecha_fin"><i class="fas fa-calendar-check"></i> Fecha de Fin</label>
+                        <input type="date" id="fecha_fin" name="fecha_fin" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="tipo"><i class="fas fa-percentage"></i> Tipo de Promoción</label>
+                        <select id="tipo" name="tipo" required>
+                            <option value="">Seleccionar tipo</option>
+                            <option value="Porcentaje">Descuento por porcentaje</option>
+                            <option value="Promocional">Precio promocional fijo</option>
+                            <option value="2x1">2x1</option>
+                            <option value="3x2">3x2</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="valor"><i class="fas fa-dollar-sign"></i> Valor de la Promoción</label>
+                        <input type="number" id="valor" name="valor" min="0" step="0.01" placeholder="% o precio">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="observaciones"><i class="fas fa-comment"></i> Observaciones</label>
+                    <textarea id="observaciones" name="observaciones" placeholder="Detalles adicionales de la promoción..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-box"></i> Productos Seleccionados</label>
+                    <div id="productos-seleccionados" class="selected-products">
+                        <p class="no-selection">Ningún producto seleccionado</p>
+                    </div>
+                </div>
+                
+                <!-- Botón Guardar dentro del formulario -->
+                <div class="form-group">
+                    <button type="button" class="save-btn" id="guardar-promocion-btn" onclick="guardarPromocion()">
+                        <i class="fas fa-save"></i> Guardar Promoción
+                    </button>
+                </div>
             </form>
-        </div>
-        <div class="form-section hide" id="form-section">
-            <form id="promo-form">
-                <div class="form-row">
-                    <label for="descripcion">Descripción</label>
-                    <input type="text" id="descripcion" name="descripcion" required>
+        </section>
+
+        <section class="productos-section fade-in-up">
+            <div class="productos-header">
+                <h2 class="productos-title"><i class="fas fa-boxes"></i> Productos Disponibles</h2>
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="search-productos" class="search-input" placeholder="Buscar productos...">
                 </div>
-                <div class="form-row">
-                    <label for="fecha_inicio">Fecha Inicio</label>
-                    <input type="date" id="fecha_inicio" name="fecha_inicio" required>
+            </div>
+            <div class="productos-grid" id="productos-grid"></div>
+            <div class="pagination-container">
+                <div class="pagination-info" id="pagination-info">Mostrando 0 a 0 de 0 productos</div>
+                <div class="pagination-controls">
+                    <button class="pagination-btn" id="prev-btn" onclick="irAPagina(currentPage - 1)"><i class="fas fa-chevron-left"></i></button>
+                    <div id="page-numbers"></div>
+                    <button class="pagination-btn" id="next-btn" onclick="irAPagina(currentPage + 1)"><i class="fas fa-chevron-right"></i></button>
                 </div>
-                <div class="form-row">
-                    <label for="fecha_fin">Fecha Fin</label>
-                    <input type="date" id="fecha_fin" name="fecha_fin" required>
-                </div>
-                <div class="form-row">
-                    <label for="tipo">Tipo</label>
-                    <input type="text" id="tipo" name="tipo" required>
-                </div>
-                <div class="form-row">
-                    <label for="descuento">Descuento (%)</label>
-                    <input type="number" id="descuento" name="descuento" min="0" max="100">
-                </div>
-                <div class="form-row">
-                    <label for="precio_promocional">Precio Promocional</label>
-                    <input type="number" id="precio_promocional" name="precio_promocional" min="0" step="0.01">
-                </div>
-                <div class="form-row">
-                    <label>Productos aplicables</label>
-                    <div id="productos-list" style="flex:2; display:flex; flex-direction:column; gap:8px;"></div>
-                </div>
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-edit">Registrar Promoción</button>
-                </div>
-                <div class="error-message" id="form-error"></div>
-                <div class="success-message" id="form-success"></div>
-            </form>
-        </div>
-        <div class="promo-cards" id="promo-cards">
-            <!-- Promociones aquí -->
-        </div>
-        <button class="btn" onclick="location.href='/html/dashboard.html'">Volver al Dashboard</button>
+            </div>
+        </section>
     </div>
+    
+    <!-- Sección de Promociones Existentes - Ahora debajo del formulario -->
+    <div class="promociones-existentes-container">
+        <div class="promociones-existentes-header">
+            <h2 class="promociones-existentes-title">
+                <i class="fas fa-history"></i>
+                Promociones Existentes
+            </h2>
+            <div class="promociones-search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="search-promociones" class="search-input" 
+                       placeholder="Buscar promociones...">
+            </div>
+        </div>
+    
+        <div class="promociones-grid" id="promociones-grid">
+            <!-- Las promociones se cargarán dinámicamente aquí -->
+        </div>
+    
+        <div class="promociones-pagination-container">
+            <div class="promociones-pagination-info" id="promociones-pagination-info">
+                Mostrando 0 a 0 de 0 promociones
+            </div>
+            <div class="promociones-pagination-controls">
+                <button class="pagination-btn" id="promociones-prev-btn" onclick="irAPaginaPromociones(currentPagePromociones - 1)">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div id="promociones-page-numbers"></div>
+                <button class="pagination-btn" id="promociones-next-btn" onclick="irAPaginaPromociones(currentPagePromociones + 1)">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script src="/js/promociones.js"></script>
 </body>
 </html> 

@@ -1,17 +1,31 @@
 const db = require('../config/db');
 
-function buscarPorVenta(ID_Venta) {
-  return new Promise((resolve, reject) => {
-    db.query('SELECT * FROM detalleventa WHERE ID_Venta = ?', [ID_Venta], (err, results) => {
-      if (err) return reject(err);
-      resolve(results);
-    });
-  });
+async function buscarPorVenta(idVenta) {
+  try {
+    console.log(`🔍 Buscando detalles de venta ${idVenta}...`);
+    
+    const sql = `
+      SELECT dv.*, p.Nombre as Nombre_Producto, p.Marca
+      FROM detalleventa dv
+      JOIN producto p ON dv.ID_Producto = p.ID_Producto
+      WHERE dv.ID_Venta = ?
+    `;
+    
+    const [results] = await db.promise.query(sql, [idVenta]);
+    console.log(`✅ Detalles encontrados: ${results.length}`);
+    
+    return results;
+  } catch (error) {
+    console.error('❌ Error en buscarPorVenta:', error);
+    throw error;
+  }
 }
 
-function insertarDetalle(detalleData) {
-  return new Promise((resolve, reject) => {
-    const sql = `INSERT INTO detalleventa (ID_Venta, ID_Producto, Cantidad, Precio_Unitario, Subtotal) VALUES (?, ?, ?, ?, ?)`;
+async function insertarDetalle(detalleData) {
+  try {
+    console.log('📤 Insertando detalle de venta:', detalleData);
+    
+    const sql = 'INSERT INTO detalleventa (ID_Venta, ID_Producto, Cantidad, Precio_Unitario, Subtotal) VALUES (?, ?, ?, ?, ?)';
     const values = [
       detalleData.ID_Venta,
       detalleData.ID_Producto,
@@ -19,11 +33,18 @@ function insertarDetalle(detalleData) {
       detalleData.Precio_Unitario,
       detalleData.Subtotal
     ];
-    db.query(sql, values, (err, result) => {
-      if (err) return reject(err);
-      resolve({ ID_Detalle: result.insertId, ...detalleData });
-    });
-  });
+    
+    console.log('📄 SQL:', sql);
+    console.log('📄 Valores:', values);
+    
+    const [result] = await db.promise.query(sql, values);
+    console.log('✅ Detalle insertado con ID:', result.insertId);
+    
+    return { ID_Detalle: result.insertId, ...detalleData };
+  } catch (error) {
+    console.error('❌ Error en insertarDetalle:', error);
+    throw error;
+  }
 }
 
 module.exports = {

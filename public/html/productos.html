@@ -3,169 +3,671 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Productos</title>
+    <title>Gestión de Productos - Tienda de Abarrotes</title>
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        /* Estilos específicos para la página de productos */
+        body {
+            background: var(--light-gray);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        
+        .productos-header {
+            background: var(--pure-white);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-title {
+            color: var(--soft-black);
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .header-title i {
+            color: var(--coca-cola-red);
+            font-size: 2rem;
+        }
+        
+        .nav-btn {
+            background: var(--bright-blue);
+            color: var(--pure-white);
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .nav-btn:hover {
+            background: var(--hover-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 97, 242, 0.3);
+        }
+        
         .productos-container {
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 32px 24px;
-            background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 2rem;
+            min-height: calc(100vh - 120px);
         }
-        .productos-title {
-            text-align: center;
-            margin-bottom: 32px;
+        
+        /* Sección izquierda - Tabla de productos */
+        .productos-main {
+            background: var(--pure-white);
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
         }
+        
+        .productos-toolbar {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #E0E0E0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .search-container {
+            position: relative;
+            flex: 1;
+            max-width: 400px;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 3rem;
+            border: 2px solid #E0E0E0;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            background-color: var(--pure-white);
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--coca-cola-red);
+            box-shadow: 0 0 0 3px rgba(228, 0, 43, 0.1);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--dark-gray);
+            font-size: 1.1rem;
+        }
+        
+        .productos-count {
+            color: var(--dark-gray);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+        
+        .productos-table-container {
+            overflow-x: auto;
+            max-height: 600px;
+        }
+        
         .productos-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 32px;
+            background-color: var(--pure-white);
         }
-        .productos-table th, .productos-table td {
-            padding: 12px 8px;
-            border-bottom: 1px solid #e0e0e0;
-            text-align: left;
-        }
+        
         .productos-table th {
-            background: var(--primary-light, #f5f6fa);
+            background-color: var(--light-gray);
+            color: var(--soft-black);
+            font-weight: 600;
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 2px solid #E0E0E0;
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
+        
+        .productos-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #F0F0F0;
+            color: var(--dark-gray);
+            vertical-align: middle;
+        }
+        
         .productos-table tr:hover {
-            background: #f8fafc;
-            transition: background 0.2s;
+            background-color: rgba(245, 245, 245, 0.5);
+            transition: background-color 0.2s ease;
         }
-        .btn {
-            padding: 7px 18px;
-            border-radius: 6px;
+        
+        .producto-nombre {
+            font-weight: 600;
+            color: var(--soft-black);
+        }
+        
+        .producto-precio {
+            font-weight: 600;
+            color: var(--coca-cola-red);
+        }
+        
+        .producto-stock {
+            font-weight: 500;
+        }
+        
+        .stock-bajo {
+            color: var(--coca-cola-red);
+        }
+        
+        .stock-medio {
+            color: #f39c12;
+        }
+        
+        .stock-alto {
+            color: #27ae60;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
+        .btn-action {
+            padding: 0.5rem;
             border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .btn-edit {
+            background-color: var(--bright-blue);
+            color: var(--pure-white);
+        }
+        
+        .btn-edit:hover {
+            background-color: var(--hover-blue);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(0, 97, 242, 0.3);
+        }
+        
+        .btn-delete {
+            background-color: var(--coca-cola-red);
+            color: var(--pure-white);
+        }
+        
+        .btn-delete:hover {
+            background-color: var(--hover-red);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(228, 0, 43, 0.3);
+        }
+        
+        /* Paginación */
+        .pagination-container {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid #E0E0E0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .pagination-info {
+            color: var(--dark-gray);
+            font-size: 0.95rem;
+        }
+        
+        .pagination-controls {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
+        .pagination-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid #E0E0E0;
+            background: var(--pure-white);
+            color: var(--dark-gray);
+            border-radius: 8px;
+            font-size: 0.9rem;
             font-weight: 500;
             cursor: pointer;
-            margin-right: 6px;
-            transition: background 0.15s, color 0.15s;
+            transition: all 0.3s ease;
         }
-        .btn-edit {
-            background: #2980b9;
-            color: #fff;
+        
+        .pagination-btn:hover {
+            border-color: var(--coca-cola-red);
+            color: var(--coca-cola-red);
         }
-        .btn-edit:hover {
-            background: #1c5d8c;
+        
+        .pagination-btn.active {
+            background: var(--coca-cola-red);
+            color: var(--pure-white);
+            border-color: var(--coca-cola-red);
         }
-        .btn-delete {
-            background: #e74c3c;
-            color: #fff;
+        
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
-        .btn-delete:hover {
-            background: #c0392b;
-        }
-        .form-section {
-            margin-bottom: 32px;
-            background: var(--primary-light, #f5f6fa);
-            padding: 20px 18px;
-            border-radius: 10px;
-        }
-        .form-row {
+        
+        #page-numbers {
             display: flex;
-            gap: 16px;
-            margin-bottom: 12px;
+            gap: 0.25rem;
+            align-items: center;
         }
-        .form-row label {
-            min-width: 120px;
+        
+        /* Sección derecha - Formulario fijo */
+        .form-section {
+            background: var(--pure-white);
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            padding: 2rem;
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+            max-height: calc(100vh - 140px);
+            overflow-y: auto;
+        }
+        
+        .form-title {
+            color: var(--soft-black);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--soft-black);
             font-weight: 500;
+            font-size: 0.95rem;
         }
-        .form-row input, .form-row select {
-            flex: 1;
-            padding: 7px 10px;
-            border-radius: 5px;
-            border: 1px solid #d0d0d0;
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
             font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
         }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--coca-cola-red);
+            box-shadow: 0 0 0 3px rgba(228, 0, 43, 0.1);
+        }
+        
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            background-color: var(--pure-white);
+            cursor: pointer;
+        }
+        
+        .form-group select option {
+            padding: 0.5rem;
+            font-family: 'Poppins', sans-serif;
+        }
+        
         .form-actions {
-            text-align: right;
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
         }
-        .form-actions .btn {
-            margin-left: 8px;
+        
+        .btn-submit {
+            background: var(--coca-cola-red);
+            color: var(--pure-white);
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
         }
-        .error-message {
-            color: #e74c3c;
-            margin-bottom: 10px;
+        
+        .btn-submit:hover {
+            background: var(--hover-red);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(228, 0, 43, 0.3);
+        }
+        
+        .btn-cancel {
+            background: transparent;
+            color: var(--dark-gray);
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-cancel:hover {
+            border-color: var(--coca-cola-red);
+            color: var(--coca-cola-red);
+        }
+        
+        .message {
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-weight: 500;
             text-align: center;
         }
+        
+        .error-message {
+            color: var(--coca-cola-red);
+            background-color: rgba(228, 0, 43, 0.1);
+            border-left: 4px solid var(--coca-cola-red);
+        }
+        
         .success-message {
             color: #27ae60;
-            margin-bottom: 10px;
-            text-align: center;
+            background-color: rgba(39, 174, 96, 0.1);
+            border-left: 4px solid #27ae60;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .productos-container {
+                grid-template-columns: 1fr 350px;
+                gap: 1.5rem;
+                padding: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .productos-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .form-section {
+                position: static;
+                order: -1;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .productos-header {
+                padding: 1rem 1.5rem;
+            }
+            
+            .header-title {
+                font-size: 1.5rem;
+            }
+            
+            .productos-container {
+                padding: 1rem;
+            }
+            
+            .productos-toolbar {
+                padding: 1rem 1.5rem;
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-container {
+                max-width: none;
+            }
+            
+            .productos-table th,
+            .productos-table td {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.9rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+            
+            .btn-action {
+                width: 28px;
+                height: 28px;
+                font-size: 0.8rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .productos-table-container {
+                font-size: 0.85rem;
+            }
+            
+            .form-section {
+                padding: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
-    <button class="btn logout-btn" id="logout-btn" style="position:absolute;top:24px;right:32px;">Cerrar sesión</button>
-    <div id="logout-message" class="success-message" style="display:none;position:fixed;top:30px;right:30px;z-index:1000;">Sesión finalizada</div>
+    <header class="productos-header">
+        <div class="header-content">
+            <h1 class="header-title">
+                <i class="fas fa-box"></i>
+                Gestión de Productos
+            </h1>
+            <button class="nav-btn" onclick="location.href='/html/dashboard.html'">
+                <i class="fas fa-arrow-left"></i>
+                Volver al Panel
+            </button>
+        </div>
+    </header>
+    
     <div class="productos-container">
-        <h1 class="productos-title">Gestión de Productos</h1>
+        <!-- Sección izquierda - Tabla de productos -->
+        <div class="productos-main">
+            <div class="productos-toolbar">
+                <div class="search-container">
+                    <input type="text" class="search-input" id="search-input" placeholder="Buscar productos por nombre...">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+                <div class="productos-count">
+                    <span id="productos-count">0</span> productos encontrados
+                </div>
+            </div>
+            
+            <div class="productos-table-container">
+                <table class="productos-table" id="productos-table">
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-hashtag"></i> ID</th>
+                            <th><i class="fas fa-tag"></i> Nombre</th>
+                            <th><i class="fas fa-industry"></i> Marca</th>
+                            <th><i class="fas fa-truck"></i> Proveedor</th>
+                            <th><i class="fas fa-dollar-sign"></i> Precio</th>
+                            <th><i class="fas fa-warehouse"></i> Stock</th>
+                            <th><i class="fas fa-cogs"></i> Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productos-tbody">
+                        <!-- Productos aquí -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="pagination-container">
+                <div class="pagination-info">
+                    Mostrando <span id="pagination-start">1</span> a <span id="pagination-end">10</span> de <span id="pagination-total">0</span> productos
+                </div>
+                <div class="pagination-controls">
+                    <button class="pagination-btn" id="prev-page" disabled>
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <div id="page-numbers"></div>
+                    <button class="pagination-btn" id="next-page" disabled>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sección derecha - Formulario fijo -->
         <div class="form-section">
-            <h2 style="margin-top:0;margin-bottom:18px;text-align:center;font-size:1.15rem;letter-spacing:0.5px;">Agregar nuevo producto</h2>
+            <h2 class="form-title">
+                <i class="fas fa-plus-circle"></i>
+                Agregar Producto
+            </h2>
+            
             <form id="producto-form">
-                <div class="form-row">
-                    <label for="nombre">Nombre</label>
+                <div class="form-group">
+                    <label for="nombre">
+                        <i class="fas fa-tag"></i> Nombre
+                    </label>
                     <input type="text" id="nombre" name="nombre" required>
                 </div>
-                <div class="form-row">
-                    <label for="marca">Marca</label>
+                
+                <div class="form-group">
+                    <label for="marca">
+                        <i class="fas fa-industry"></i> Marca
+                    </label>
                     <input type="text" id="marca" name="marca">
                 </div>
-                <div class="form-row">
-                    <label for="presentacion">Presentación</label>
+                
+                <div class="form-group">
+                    <label for="presentacion">
+                        <i class="fas fa-box-open"></i> Presentación
+                    </label>
                     <input type="text" id="presentacion" name="presentacion">
                 </div>
-                <div class="form-row">
-                    <label for="precio_venta">Precio Venta</label>
-                    <input type="number" id="precio_venta" name="precio_venta" step="0.01" required>
+                
+                <div class="form-group">
+                    <label for="precio_venta">
+                        <i class="fas fa-dollar-sign"></i> Precio Venta
+                    </label>
+                    <input type="number" id="precio_venta" name="precio_venta" min="0" step="0.01" required>
                 </div>
-                <div class="form-row">
-                    <label for="precio_compra">Precio Compra</label>
-                    <input type="number" id="precio_compra" name="precio_compra" step="0.01">
+                
+                <div class="form-group">
+                    <label for="precio_compra">
+                        <i class="fas fa-shopping-cart"></i> Precio Compra
+                    </label>
+                    <input type="number" id="precio_compra" name="precio_compra" min="0" step="0.01" required>
                 </div>
-                <div class="form-row">
-                    <label for="stock_total">Stock Total</label>
-                    <input type="number" id="stock_total" name="stock_total" required>
+                
+                <div class="form-group">
+                    <label for="stock_total">
+                        <i class="fas fa-warehouse"></i> Stock Total
+                    </label>
+                    <input type="number" id="stock_total" name="stock_total" min="0" required>
                 </div>
-                <div class="form-row">
-                    <label for="fecha_caducidad">Fecha Caducidad</label>
+                
+                <div class="form-group">
+                    <label for="fecha_caducidad">
+                        <i class="fas fa-calendar-times"></i> Fecha Caducidad
+                    </label>
                     <input type="date" id="fecha_caducidad" name="fecha_caducidad">
                 </div>
-                <div class="form-row">
-                    <label for="id_proveedor">ID Proveedor</label>
-                    <input type="number" id="id_proveedor" name="id_proveedor">
+                
+                <div class="form-group">
+                    <label for="id_proveedor">
+                        <i class="fas fa-truck"></i> Proveedor
+                    </label>
+                    <select id="id_proveedor" name="id_proveedor" required>
+                        <option value="">Seleccionar proveedor</option>
+                        <option value="1">Sabritas</option>
+                        <option value="2">bimbo</option>
+                        <option value="3">pepsico</option>
+                        <option value="4">Coca Cola</option>
+                    </select>
                 </div>
+                
                 <div class="form-actions">
-                    <button type="submit" class="btn btn-edit" id="submit-btn">Agregar Producto</button>
-                    <button type="button" class="btn" id="cancel-btn" style="display:none;">Cancelar</button>
+                    <button type="submit" class="btn-submit" id="submit-btn">
+                        <i class="fas fa-plus"></i>
+                        Agregar Producto
+                    </button>
+                    <button type="button" class="btn-cancel" id="cancel-btn" style="display:none;">
+                        <i class="fas fa-times"></i>
+                        Cancelar
+                    </button>
                 </div>
-                <div class="error-message" id="form-error"></div>
-                <div class="success-message" id="form-success"></div>
+                
+                <div class="error-message" id="form-error" style="display:none;"></div>
+                <div class="success-message" id="form-success" style="display:none;"></div>
             </form>
         </div>
-        <div class="productos-table-wrapper">
-            <table class="productos-table" id="productos-table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Marca</th>
-                        <th>Presentación</th>
-                        <th>Precio Venta</th>
-                        <th>Stock</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="productos-tbody">
-                    <!-- Productos aquí -->
-                </tbody>
-            </table>
-        </div>
-        <button class="btn" onclick="location.href='/html/dashboard.html'">Volver al Dashboard</button>
     </div>
+    
     <script src="/js/productos.js"></script>
 </body>
 </html> 

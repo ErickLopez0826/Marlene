@@ -3,143 +3,578 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Corte de Caja</title>
+    <title>Corte de Caja - Tienda de Abarrotes</title>
     <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        .caja-container {
-            max-width: 600px;
-            margin: 40px auto;
-            padding: 32px 24px;
-            background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+        :root {
+            --coca-cola-red: #E4002B;
+            --soft-black: #222222;
+            --dark-gray: #666666;
+            --light-gray: #F5F5F5;
+            --pure-white: #FFFFFF;
+            --blue: #0061F2;
         }
-        .caja-title {
-            text-align: center;
-            margin-bottom: 32px;
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .form-section {
-            margin-bottom: 32px;
-            background: var(--primary-light, #f5f6fa);
-            padding: 20px 18px;
-            border-radius: 10px;
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--light-gray);
+            color: var(--soft-black);
+            line-height: 1.6;
         }
-        .form-row {
+
+        /* Header */
+        .caja-header {
+            background: var(--coca-cola-red);
+            color: var(--pure-white);
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 20px rgba(228, 0, 43, 0.2);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
             display: flex;
-            gap: 16px;
-            margin-bottom: 12px;
+            justify-content: space-between;
+            align-items: center;
         }
-        .form-row label {
-            min-width: 120px;
+
+        .header-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--pure-white);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
             font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
-        .form-row input, .form-row select {
-            flex: 1;
-            padding: 7px 10px;
-            border-radius: 5px;
-            border: 1px solid #d0d0d0;
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* Contenedor principal */
+        .caja-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            min-height: calc(100vh - 200px);
+        }
+
+        /* Columna izquierda - Formulario */
+        .form-section {
+            background: var(--pure-white);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 2rem;
+            height: fit-content;
+        }
+
+        .form-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--soft-black);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: var(--soft-black);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            background: var(--pure-white);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--coca-cola-red);
+            box-shadow: 0 0 0 3px rgba(228, 0, 43, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .save-btn {
+            background: var(--coca-cola-red);
+            color: var(--pure-white);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
             font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
         }
-        .form-actions {
-            text-align: right;
+
+        .save-btn:hover {
+            background: #c40024;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(228, 0, 43, 0.3);
         }
-        .form-actions .btn {
-            margin-left: 8px;
+
+        .save-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
-        .error-message {
-            color: #e74c3c;
-            margin-bottom: 10px;
-            text-align: center;
+
+        /* Columna derecha - Historial */
+        .historial-section {
+            background: var(--pure-white);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
         }
-        .success-message {
-            color: #27ae60;
-            margin-bottom: 10px;
-            text-align: center;
+
+        .historial-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
-        .panel-corte {
-            background: var(--primary-light, #f5f6fa);
+
+        .historial-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--soft-black);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .search-container {
+            position: relative;
+            flex: 1;
+            max-width: 300px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 2.5rem;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--coca-cola-red);
+            box-shadow: 0 0 0 3px rgba(228, 0, 43, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--dark-gray);
+        }
+
+        .cortes-grid {
+            display: grid;
+            gap: 1rem;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .corte-card {
+            background: var(--light-gray);
             border-radius: 12px;
-            padding: 24px 18px;
-            margin-top: 24px;
-            box-shadow: 0 1px 8px rgba(0,0,0,0.07);
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.5s, transform 0.5s;
+            padding: 1.5rem;
+            border-left: 4px solid var(--coca-cola-red);
+            transition: all 0.3s ease;
+            cursor: pointer;
         }
-        .panel-corte.visible {
-            opacity: 1;
-            transform: translateY(0);
+
+        .corte-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
         }
-        .panel-corte h3 {
-            margin-top: 0;
+
+        .corte-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
         }
-        .panel-corte .panel-row {
-            margin-bottom: 10px;
-            font-size: 1.08rem;
+
+        .corte-fecha {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--soft-black);
         }
-        .panel-corte .panel-label {
+
+        .corte-responsable {
+            font-size: 0.9rem;
+            color: var(--dark-gray);
             font-weight: 500;
-            min-width: 120px;
-            display: inline-block;
         }
-        .panel-corte .panel-obs {
-            color: #555;
+
+        .corte-totales {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .corte-total {
+            text-align: center;
+        }
+
+        .corte-total-label {
+            font-size: 0.8rem;
+            color: var(--dark-gray);
+            font-weight: 500;
+            margin-bottom: 0.3rem;
+        }
+
+        .corte-total-valor {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--soft-black);
+        }
+
+        .corte-total-valor.efectivo {
+            color: #27ae60;
+        }
+
+        .corte-total-valor.transferencia {
+            color: #3498db;
+        }
+
+        .corte-total-valor.total {
+            color: var(--coca-cola-red);
+            font-size: 1.3rem;
+        }
+
+        .corte-observaciones {
+            font-size: 0.9rem;
+            color: var(--dark-gray);
             font-style: italic;
+            margin-top: 0.5rem;
+        }
+
+        /* Botón flotante para móviles */
+        .floating-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--coca-cola-red);
+            color: var(--pure-white);
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(228, 0, 43, 0.3);
+            transition: all 0.3s ease;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .floating-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 35px rgba(228, 0, 43, 0.4);
+        }
+
+        /* Mensajes */
+        .message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .caja-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .form-section {
+                position: static;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .caja-header {
+                padding: 1rem;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .caja-container {
+                margin: 1rem;
+                padding: 0;
+            }
+
+            .form-section,
+            .historial-section {
+                padding: 1.5rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .historial-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-container {
+                max-width: none;
+            }
+
+            .floating-btn {
+                display: flex;
+            }
+
+            .form-section {
+                display: none;
+            }
+
+            .form-section.active {
+                display: block;
+            }
+        }
+
+        /* Animaciones */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* Scrollbar personalizado */
+        .cortes-grid::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .cortes-grid::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .cortes-grid::-webkit-scrollbar-thumb {
+            background: var(--coca-cola-red);
+            border-radius: 3px;
+        }
+
+        .cortes-grid::-webkit-scrollbar-thumb:hover {
+            background: #c40024;
         }
     </style>
 </head>
 <body>
+    <!-- Header -->
+    <header class="caja-header">
+        <div class="header-content">
+            <h1 class="header-title">
+                <i class="fas fa-cash-register"></i>
+                Corte de Caja
+            </h1>
+            <div class="header-actions">
+                <a href="/html/dashboard.html" class="nav-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    Volver al Panel
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenedor principal -->
     <div class="caja-container">
-        <h1 class="caja-title">Corte de Caja</h1>
-        <div class="form-section">
+        <!-- Columna izquierda - Formulario -->
+        <section class="form-section fade-in-up">
+            <h2 class="form-title">
+                <i class="fas fa-plus-circle"></i>
+                Nuevo Corte de Caja
+            </h2>
+            
             <form id="corte-form">
-                <div class="form-row">
-                    <label for="fecha_corte">Fecha de corte</label>
+                <div class="form-group">
+                    <label for="fecha_corte">
+                        <i class="fas fa-calendar"></i>
+                        Fecha de Corte
+                    </label>
                     <input type="date" id="fecha_corte" name="fecha_corte" required>
                 </div>
+
                 <div class="form-row">
-                    <label for="total_efectivo">Total Efectivo</label>
-                    <input type="number" id="total_efectivo" name="total_efectivo" required min="0" step="0.01">
+                    <div class="form-group">
+                        <label for="total_efectivo">
+                            <i class="fas fa-money-bill-wave"></i>
+                            Total Efectivo
+                        </label>
+                        <input type="number" id="total_efectivo" name="total_efectivo" 
+                               required min="0" step="0.01" placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label for="total_transferencia">
+                            <i class="fas fa-credit-card"></i>
+                            Total Transferencia
+                        </label>
+                        <input type="number" id="total_transferencia" name="total_transferencia" 
+                               required min="0" step="0.01" placeholder="0.00">
+                    </div>
                 </div>
-                <div class="form-row">
-                    <label for="total_transferencia">Total Transferencia</label>
-                    <input type="number" id="total_transferencia" name="total_transferencia" required min="0" step="0.01">
+
+                <div class="form-group">
+                    <label for="total_caja">
+                        <i class="fas fa-calculator"></i>
+                        Total Caja
+                    </label>
+                    <input type="number" id="total_caja" name="total_caja" 
+                           required min="0" step="0.01" placeholder="0.00" readonly>
                 </div>
-                <div class="form-row">
-                    <label for="total_caja">Total Caja</label>
-                    <input type="number" id="total_caja" name="total_caja" required min="0" step="0.01">
+
+                <div class="form-group">
+                    <label for="responsable">
+                        <i class="fas fa-user"></i>
+                        Responsable
+                    </label>
+                    <input type="text" id="responsable" name="responsable" 
+                           required placeholder="Nombre del responsable">
                 </div>
-                <div class="form-row">
-                    <label for="responsable">Responsable</label>
-                    <input type="text" id="responsable" name="responsable" required>
+
+                <div class="form-group">
+                    <label for="observaciones">
+                        <i class="fas fa-comment"></i>
+                        Observaciones
+                    </label>
+                    <textarea id="observaciones" name="observaciones" 
+                              placeholder="Observaciones adicionales..." rows="3"></textarea>
                 </div>
-                <div class="form-row">
-                    <label for="observaciones">Observaciones</label>
-                    <input type="text" id="observaciones" name="observaciones">
-                </div>
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-edit">Registrar Corte</button>
-                </div>
-                <div class="error-message" id="form-error"></div>
-                <div class="success-message" id="form-success"></div>
+
+                <button type="submit" class="save-btn" id="guardar-corte-btn">
+                    <i class="fas fa-save"></i>
+                    Registrar Corte
+                </button>
             </form>
-        </div>
-        <div class="form-section">
-            <form id="consulta-form">
-                <div class="form-row">
-                    <label for="consulta-id">Consultar por ID</label>
-                    <input type="number" id="consulta-id" name="consulta-id" required min="1">
+
+            <div id="message-container"></div>
+        </section>
+
+        <!-- Columna derecha - Historial -->
+        <section class="historial-section fade-in-up">
+            <div class="historial-header">
+                <h2 class="historial-title">
+                    <i class="fas fa-history"></i>
+                    Historial de Cortes
+                </h2>
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="search-cortes" class="search-input" 
+                           placeholder="Buscar por fecha o responsable...">
                 </div>
-                <div class="form-actions">
-                    <button type="submit" class="btn">Consultar Corte</button>
-                </div>
-            </form>
-        </div>
-        <div class="panel-corte" id="panel-corte">
-            <!-- Panel de corte aquí -->
-        </div>
-        <button class="btn" onclick="location.href='/html/dashboard.html'">Volver al Dashboard</button>
+            </div>
+
+            <div class="cortes-grid" id="cortes-grid">
+                <!-- Los cortes se cargarán dinámicamente aquí -->
+            </div>
+        </section>
     </div>
+
+    <!-- Botón flotante para móviles -->
+    <button class="floating-btn" id="nuevo-corte-btn" onclick="mostrarFormulario()">
+        <i class="fas fa-plus"></i>
+    </button>
+
     <script src="/js/caja.js"></script>
 </body>
 </html> 
