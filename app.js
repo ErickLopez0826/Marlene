@@ -48,6 +48,19 @@ const swaggerOptions = {
 const swaggerSpecs = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
+const path = require('path');
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Ruta principal - redirigir al login
+app.get('/', (req, res) => {
+  res.redirect('/html/login.html');
+});
+
+// Ruta para el dashboard
+app.get('/dashboard', (req, res) => {
+  res.redirect('/html/dashboard.html');
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
@@ -56,6 +69,3 @@ app.listen(PORT, () => {
   console.log(`- Dashboard:  http://localhost:${PORT}/html/dashboard.html`);
   // Agrega aquí más rutas si creas más páginas
 });
-
-const path = require('path');
-app.use(express.static(path.join(__dirname, 'public')));
