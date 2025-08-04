@@ -35,14 +35,14 @@ router.get('/all', async (req, res) => {
  * @swagger
  * /api/productos:
  *   get:
- *     summary: Obtiene todos los productos activos
+ *     summary: Obtiene todos los productos
  *     tags:
  *       - Productos
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Lista de productos activos
+ *         description: Lista de todos los productos
  *   post:
  *     summary: Crea un nuevo producto
  *     tags:
@@ -91,7 +91,7 @@ router.get('/all', async (req, res) => {
  *         description: Datos inválidos
  */
 router.post('/', authMiddleware, productosController.crearProducto);
-router.get('/', authMiddleware, productosController.getProductosActivos);
+router.get('/', authMiddleware, productosController.getProductos);
 
 /**
  * @swagger
@@ -169,8 +169,27 @@ router.get('/', authMiddleware, productosController.getProductosActivos);
  *         description: Datos inválidos
  *       404:
  *         description: Producto no encontrado
+ *   delete:
+ *     summary: Elimina un producto por ID
+ *     tags:
+ *       - Productos
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del producto
+ *     responses:
+ *       200:
+ *         description: Producto eliminado
+ *       404:
+ *         description: Producto no encontrado
  */
 router.put('/:id', authMiddleware, productosController.editarProducto);
 router.get('/:id', authMiddleware, productosController.getProductoPorId);
+router.delete('/:id', authMiddleware, productosController.eliminarProducto);
 
 module.exports = router;
